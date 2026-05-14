@@ -16,6 +16,258 @@
         <h1>Диспетчерская</h1>
       </div>
     </header>
+    <div class="overlay hidden" id="overlay-route-create">
+      <form>
+        <fieldset class="flex-column">
+          <section id="route-number-color">
+            <section class="flex-column input-block" id="route-number">
+              <h3>Номер маршрута:</h3>
+              <input
+                type="text"
+                class="text-number-input"
+                id="route-number-text"
+                placeholder="000"
+              />
+            </section>
+            <section class="flex-column input-block" id="color-pick">
+              <h3>Цвет маршрута</h3>
+              <div id="color-input">
+                <div id="color-input-preview"></div>
+                <input
+                  type="text"
+                  id="color-input-text"
+                  pattern="#[A-Za-z]{6}"
+                  placeholder="#A27DF8"
+                />
+              </div>
+            </section>
+          </section>
+          <section id="route-stops">
+            <section class="flex-column input-block" id="stop-first">
+              <h3>Начальная остановка:</h3>
+              <input
+                type="text"
+                class="text-number-input"
+                id="stop-first-text"
+                placeholder="Введите текст..."
+              />
+            </section>
+            <section class="flex-column input-block" id="stop-last">
+              <h3>Конечная остановка:</h3>
+              <input
+                type="text"
+                class="text-number-input"
+                id="stop-first-text"
+                placeholder="Введите текст..."
+              />
+            </section>
+          </section>
+          <section id="route-prices">
+            <section class="flex-column input-block" id="price-variation">
+              <h3>Вариации цены:</h3>
+              <div class="dropdown">
+                <button class="dropdown-button" type="button">
+                  <p class="dropdown-choice">По способу оплаты</p>
+                  <svg
+                    viewBox="0 0 14 7"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      clip-rule="evenodd"
+                      d="M0.157097 0.22787C0.39162 -0.0457397 0.803543 -0.0774261 1.07715 0.157097L6.74251 5.01312L12.4079 0.157097C12.6815 -0.0774255 13.0934 -0.0457391 13.3279 0.227871C13.5624 0.501481 13.5308 0.913404 13.2572 1.14793L7.16715 6.36793C6.9228 6.57737 6.56222 6.57737 6.31787 6.36793L0.22787 1.14793C-0.0457397 0.913404 -0.0774261 0.501481 0.157097 0.22787Z"
+                    />
+                  </svg>
+                </button>
+                <div class="dropdown-content">
+                  <div></div>
+                  <div>По способу оплаты</div>
+                  <div>По ...</div>
+                </div>
+              </div>
+            </section>
+            <span></span>
+            <section class="flex-column" id="price-first">
+              <h3>Наличный способ</h3>
+              <div>
+                <input type="text" class="text-number-input" />
+                руб.
+              </div>
+            </section>
+            <section class="flex-column" id="price-second">
+              <h3>Безналичный способ</h3>
+              <div>
+                <input type="text" class="text-number-input" />
+                руб.
+              </div>
+            </section>
+          </section>
+          <section class="form-control-buttons">
+            <button type="button">Закрыть</button>
+            <button type="submit">Сохранить</button>
+          </section>
+        </fieldset>
+      </form>
+    </div>
+    <div class="overlay hidden" id="overlay-route-time">
+      <form>
+        <fieldset class="flex-column">
+          <section id="time-value-type-precise-time">
+            <section class="flex-column input-block" id="time-value-type">
+              <h3>Тип значения:</h3>
+              <div class="dropdown">
+                <button class="dropdown-button" type="button">
+                  <p class="dropdown-choice">Диапазон времени</p>
+                  <svg
+                    viewBox="0 0 14 7"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      clip-rule="evenodd"
+                      d="M0.157097 0.22787C0.39162 -0.0457397 0.803543 -0.0774261 1.07715 0.157097L6.74251 5.01312L12.4079 0.157097C12.6815 -0.0774255 13.0934 -0.0457391 13.3279 0.227871C13.5624 0.501481 13.5308 0.913404 13.2572 1.14793L7.16715 6.36793C6.9228 6.57737 6.56222 6.57737 6.31787 6.36793L0.22787 1.14793C-0.0457397 0.913404 -0.0774261 0.501481 0.157097 0.22787Z"
+                    />
+                  </svg>
+                </button>
+                <div class="dropdown-content">
+                  <div></div>
+                  <div>Диапазон времени</div>
+                  <div>Точное время</div>
+                </div>
+              </div>
+            </section>
+            <section
+              class="flex-column input-block"
+              id="precise-time"
+              style="visibility: hidden"
+            >
+              <h3>Время:</h3>
+              <input
+                type="text"
+                class="text-number-input"
+                id="precise-time-text"
+                placeholder="00:00"
+              />
+            </section>
+          </section>
+          <section id="time-interval">
+            <section class="flex-column input-block" id="from-time">
+              <h3>С:</h3>
+              <input
+                type="text"
+                class="text-number-input"
+                id="from-time-text"
+                placeholder="00:00"
+              />
+            </section>
+            <section class="flex-column input-block" id="to-time">
+              <h3>До:</h3>
+              <input
+                type="text"
+                class="text-number-input"
+                id="to-time-text"
+                placeholder="00:00"
+              />
+            </section>
+          </section>
+          <section class="form-control-buttons">
+            <button type="button">Закрыть</button>
+            <button type="submit">Сохранить</button>
+          </section>
+        </fieldset>
+      </form>
+    </div>
+    <div class="overlay hidden" id="overlay-route-period">
+      <form>
+        <fieldset class="flex-column">
+          <section id="period-value-type-precise-period">
+            <section class="flex-column input-block" id="period-value-type">
+              <h3>Тип интервала:</h3>
+              <div class="dropdown">
+                <button class="dropdown-button" type="button">
+                  <p class="dropdown-choice">Диапазон времени</p>
+                  <svg
+                    viewBox="0 0 14 7"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      clip-rule="evenodd"
+                      d="M0.157097 0.22787C0.39162 -0.0457397 0.803543 -0.0774261 1.07715 0.157097L6.74251 5.01312L12.4079 0.157097C12.6815 -0.0774255 13.0934 -0.0457391 13.3279 0.227871C13.5624 0.501481 13.5308 0.913404 13.2572 1.14793L7.16715 6.36793C6.9228 6.57737 6.56222 6.57737 6.31787 6.36793L0.22787 1.14793C-0.0457397 0.913404 -0.0774261 0.501481 0.157097 0.22787Z"
+                    />
+                  </svg>
+                </button>
+                <div class="dropdown-content">
+                  <div></div>
+                  <div>Диапазон времени</div>
+                  <div>Точный интервал</div>
+                  <div>Дежурный</div>
+                </div>
+              </div>
+            </section>
+            <section
+              class="flex-column input-block"
+              id="precise-period"
+              style="visibility: hidden"
+            >
+              <h3>Интервал:</h3>
+              <div>
+                <input
+                  type="text"
+                  class="text-number-input"
+                  id="precise-period-text"
+                />
+                мин.
+              </div>
+            </section>
+          </section>
+          <section id="period-interval">
+            <section class="flex-column input-block" id="from-period">
+              <h3>От:</h3>
+              <div>
+                <input type="text" class="text-number-input" />
+                мин.
+              </div>
+            </section>
+            <section class="flex-column input-block" id="to-period">
+              <h3>До:</h3>
+              <div>
+                <input type="text" class="text-number-input" />
+                мин.
+              </div>
+            </section>
+          </section>
+          <section class="form-control-buttons">
+            <button type="button">Закрыть</button>
+            <button type="submit">Сохранить</button>
+          </section>
+        </fieldset>
+      </form>
+    </div>
+    <div class="overlay hidden" id="overlay-route-note">
+      <form>
+        <fieldset class="flex-column">
+          <section id="route-note">
+            <section class="flex-column input-block" id="note">
+              <h3>Примечание:</h3>
+              <input
+                type="text"
+                class="text-number-input"
+                id="note-text"
+                placeholder="Введите текст..."
+              />
+            </section>
+          </section>
+          <section class="form-control-buttons">
+            <button type="button">Закрыть</button>
+            <button type="submit">Сохранить</button>
+          </section>
+        </fieldset>
+      </form>
+    </div>
     <div class="main-content">
       <nav class="flex-column">
         <button>
@@ -199,7 +451,7 @@
             </section>
           </section>
           <section id="route-prices">
-            <section class="flex-column" id="price-variation">
+            <section class="flex-column input-block" id="price-variation">
               <h3>Вариации цены:</h3>
               <div class="dropdown">
                 <button class="dropdown-button">
