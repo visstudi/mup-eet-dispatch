@@ -16,6 +16,129 @@
         <h1>Диспетчерская</h1>
       </div>
     </header>
+    <div class="overlay hidden" id="overlay-user-create">
+      <form>
+        <fieldset class="flex-column">
+          <section class="flex-row" id="user-name-position">
+            <section class="flex-column input-block" id="user-name">
+              <h3>ФИО:</h3>
+              <input
+                type="text"
+                class="text-number-input"
+                id="user-name-text"
+                placeholder="Введите ФИО..."
+              />
+            </section>
+            <section class="flex-column input-block" id="user-position">
+              <h3>Должность:</h3>
+              <div class="dropdown">
+                <button class="dropdown-button" type="button">
+                  <p class="dropdown-choice">Водитель</p>
+                  <svg
+                    viewBox="0 0 14 7"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      clip-rule="evenodd"
+                      d="M0.157097 0.22787C0.39162 -0.0457397 0.803543 -0.0774261 1.07715 0.157097L6.74251 5.01312L12.4079 0.157097C12.6815 -0.0774255 13.0934 -0.0457391 13.3279 0.227871C13.5624 0.501481 13.5308 0.913404 13.2572 1.14793L7.16715 6.36793C6.9228 6.57737 6.56222 6.57737 6.31787 6.36793L0.22787 1.14793C-0.0457397 0.913404 -0.0774261 0.501481 0.157097 0.22787Z"
+                    />
+                  </svg>
+                </button>
+                <div class="dropdown-content">
+                  <div></div>
+                  <div>Водитель</div>
+                  <div>Диспетчер</div>
+                  <div>...</div>
+                </div>
+              </div>
+            </section>
+          </section>
+          <section class="flex-row" id="user-login-password">
+            <section class="flex-column input-block" id="user-login">
+              <h3>Логин:</h3>
+              <input
+                type="text"
+                class="text-number-input"
+                id="user-login-text"
+                placeholder="Введите логин..."
+              />
+            </section>
+            <section class="flex-column input-block" id="user-password-wrapper">
+              <h3>Пароль:</h3>
+              <div class="icon-input" id="user-password">
+                <input
+                  type="text"
+                  id="user-password-text"
+                  placeholder="Введите пароль..."
+                />
+                <div class="flex-row" id="user-password-buttons">
+                  <svg
+                    viewBox="0 0 20 20"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                    id="user-password-generate"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      clip-rule="evenodd"
+                      d="M7.05838 2.05806C7.30246 1.81398 7.69819 1.81398 7.94227 2.05806L9.60893 3.72472C9.78768 3.90347 9.84116 4.1723 9.74442 4.40584C9.64768 4.63939 9.41978 4.79167 9.16699 4.79167H7.50033C4.62384 4.79167 2.29199 7.12352 2.29199 10C2.29199 12.8765 4.62404 15.2083 7.50056 15.2083H7.91699C8.26217 15.2083 8.54199 15.4882 8.54199 15.8333C8.54199 16.1785 8.26217 16.4583 7.91699 16.4583H7.50056C3.93375 16.4583 1.04199 13.5669 1.04199 10C1.04199 6.43316 3.93349 3.54167 7.50033 3.54167H7.65811L7.05838 2.94194C6.81431 2.69786 6.81431 2.30214 7.05838 2.05806ZM11.4587 4.16667C11.4587 3.82149 11.7385 3.54167 12.0837 3.54167H12.5003C16.0672 3.54167 18.9587 6.43316 18.9587 10C18.9587 13.5668 16.0672 16.4583 12.5003 16.4583H12.3425L12.9423 17.0581C13.1863 17.3021 13.1863 17.6979 12.9423 17.9419C12.6982 18.186 12.3025 18.186 12.0584 17.9419L10.3917 16.2753C10.213 16.0965 10.1595 15.8277 10.2562 15.5942C10.353 15.3606 10.5809 15.2083 10.8337 15.2083H12.5003C15.3768 15.2083 17.7087 12.8765 17.7087 10C17.7087 7.12352 15.3768 4.79167 12.5003 4.79167H12.0837C11.7385 4.79167 11.4587 4.51184 11.4587 4.16667Z"
+                    />
+                  </svg>
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                    id="user-password-show"
+                  >
+                    <path
+                      d="M9.75 12C9.75 10.7574 10.7574 9.75 12 9.75C13.2426 9.75 14.25 10.7574 14.25 12C14.25 13.2426 13.2426 14.25 12 14.25C10.7574 14.25 9.75 13.2426 9.75 12Z"
+                    />
+                    <path
+                      fill-rule="evenodd"
+                      clip-rule="evenodd"
+                      d="M2 12C2 13.6394 2.42496 14.1915 3.27489 15.2957C4.97196 17.5004 7.81811 20 12 20C16.1819 20 19.028 17.5004 20.7251 15.2957C21.575 14.1915 22 13.6394 22 12C22 10.3606 21.575 9.80853 20.7251 8.70433C19.028 6.49956 16.1819 4 12 4C7.81811 4 4.97196 6.49956 3.27489 8.70433C2.42496 9.80853 2 10.3606 2 12ZM12 8.25C9.92893 8.25 8.25 9.92893 8.25 12C8.25 14.0711 9.92893 15.75 12 15.75C14.0711 15.75 15.75 14.0711 15.75 12C15.75 9.92893 14.0711 8.25 12 8.25Z"
+                    />
+                  </svg>
+                </div>
+              </div>
+            </section>
+          </section>
+          <section id="user-state-wrapper">
+            <section class="flex-column input-block" id="user-state">
+              <h3>Состояние уч. записи:</h3>
+              <div class="dropdown">
+                <button class="dropdown-button" type="button">
+                  <p class="dropdown-choice">Активная</p>
+                  <svg
+                    viewBox="0 0 14 7"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      clip-rule="evenodd"
+                      d="M0.157097 0.22787C0.39162 -0.0457397 0.803543 -0.0774261 1.07715 0.157097L6.74251 5.01312L12.4079 0.157097C12.6815 -0.0774255 13.0934 -0.0457391 13.3279 0.227871C13.5624 0.501481 13.5308 0.913404 13.2572 1.14793L7.16715 6.36793C6.9228 6.57737 6.56222 6.57737 6.31787 6.36793L0.22787 1.14793C-0.0457397 0.913404 -0.0774261 0.501481 0.157097 0.22787Z"
+                    />
+                  </svg>
+                </button>
+                <div class="dropdown-content">
+                  <div></div>
+                  <div>Активная</div>
+                  <div>...</div>
+                </div>
+              </div>
+            </section>
+            <span></span>
+          </section>
+          <section class="form-control-buttons">
+            <button type="button">Закрыть</button>
+            <button type="submit">Сохранить</button>
+          </section>
+        </fieldset>
+      </form>
+    </div>
     <div class="main-content">
       <nav class="flex-column">
         <button>
@@ -120,7 +243,68 @@
           <p>Пользователи</p>
         </button>
       </nav>
-      <main></main>
+      <main>
+        <section class="flex-column" id="users">
+          <section class="flex-row" id="users-add-search">
+            <button class="flex-row" id="users-add">
+              <svg
+                viewBox="0 0 16 16"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  fill-rule="evenodd"
+                  clip-rule="evenodd"
+                  d="M8 16C12.4183 16 16 12.4183 16 8C16 3.58172 12.4183 0 8 0C3.58172 0 0 3.58172 0 8C0 12.4183 3.58172 16 8 16ZM8.6 5.6C8.6 5.26863 8.33137 5 8 5C7.66863 5 7.4 5.26863 7.4 5.6L7.4 7.40002H5.6C5.26863 7.40002 5 7.66865 5 8.00002C5 8.33139 5.26863 8.60002 5.6 8.60002H7.4V10.4C7.4 10.7314 7.66863 11 8 11C8.33137 11 8.6 10.7314 8.6 10.4L8.6 8.60002H10.4C10.7314 8.60002 11 8.33139 11 8.00002C11 7.66865 10.7314 7.40002 10.4 7.40002H8.6V5.6Z"
+                />
+              </svg>
+              Зарегистрировать пользователя
+            </button>
+            <div class="icon-input">
+              <input type="text" id="users-search-text" placeholder="Поиск" />
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  fill-rule="evenodd"
+                  clip-rule="evenodd"
+                  d="M18.8382 18.8382C19.1205 18.5559 19.5783 18.5559 19.8606 18.8382L21.7883 20.7659C22.0706 21.0483 22.0706 21.506 21.7883 21.7883C21.506 22.0706 21.0483 22.0706 20.7659 21.7883L18.8382 19.8606C18.5559 19.5783 18.5559 19.1205 18.8382 18.8382Z"
+                />
+                <path
+                  d="M11.1562 2.75C15.799 2.75 19.5633 6.51357 19.5635 11.1562C19.5635 15.7991 15.7991 19.5635 11.1562 19.5635C6.51357 19.5633 2.75 15.799 2.75 11.1562C2.7502 6.5137 6.5137 2.7502 11.1562 2.75Z"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                />
+              </svg>
+            </div>
+          </section>
+          <table id="users-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>ФИО</th>
+                <th>Должность</th>
+                <th>Вкл.</th>
+                <th>Редактировать</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>141</td>
+                <td>Иванов И. А.</td>
+                <td>Администратор</td>
+                <td><input type="checkbox" /></td>
+                <td><a>Открыть</a></td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+      </main>
     </div>
+
+    <!--Dropdowns-->
+    <script src="../assets/scripts/dropdowns.js"></script>
   </body>
 </html>
