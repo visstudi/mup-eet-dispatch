@@ -34,6 +34,7 @@ header {
 }
 
 button {
+  background-color: #e9e9e9;
   border: none;
 }
 
@@ -62,13 +63,27 @@ form {
   }
 }
 
-input:focus {
+input:focus,
+textarea:focus {
   outline: none;
+}
+
+textarea {
+  resize: none;
+  padding: min(1dvw, 1.5dvh) min(1dvw, 1.5dvh);
+  background-color: #e9e9e9;
+  border: none;
+  border-radius: min(1dvw, 1.5dvh);
+  font-size: min(1.4dvw, 2dvh);
 }
 
 .flex-column {
   display: flex;
   flex-direction: column;
+}
+
+.flex-row {
+  display: flex;
 }
 
 .fill-screen {
@@ -126,13 +141,12 @@ input:focus {
 }
 
 .dropdown-button {
+  cursor: pointer;
   background-color: #e9e9e9;
   border-width: 0;
   border-radius: var(--dropdown-border-radius);
   min-height: var(--dropdown-height);
   width: 100%;
-  font-size: min(1.4dvw, 2dvh);
-  font-weight: 500;
   padding: var(--dropdown-padding);
 
   position: relative;
@@ -161,15 +175,19 @@ input:focus {
   display: block;
 
   div {
-    background-color: var(--input-background-color);
-    color: var(--request-type-text-color);
+    cursor: pointer;
+    background-color: #e9e9e9;
     min-height: var(--dropdown-height);
     padding: var(--dropdown-padding);
     display: flex;
   }
 
+  div:not(:first-child):hover,
+  div:not(:first-child):focus {
+    background-color: #dbdbdb;
+  }
+
   div:first-child {
-    padding: 0;
     min-height: 0;
   }
 
@@ -177,6 +195,12 @@ input:focus {
     border-radius: 0 0 var(--dropdown-border-radius)
       var(--dropdown-border-radius);
   }
+}
+
+.dropdown-button,
+.dropdown-content > div {
+  font-size: min(1.4dvw, 2dvh);
+  font-weight: 500;
 }
 
 .header-logo {
@@ -213,6 +237,20 @@ input:focus {
 
 #overlay-route-note > form {
   width: min(34.7dvw, 50dvh);
+}
+
+#overlay-job-create > form > fieldset {
+  #job-requirements {
+    textarea {
+      height: min(10.8dvw, 15.5dvh);
+    }
+  }
+
+  #job-additional-info {
+    textarea {
+      height: min(8.4dvw, 12.1dvh);
+    }
+  }
 }
 
 .main-content {
@@ -269,7 +307,6 @@ main {
 }
 
 .list-selection {
-  padding: min(1.4dvw, 2dvh) 0;
   gap: min(1dvw, 1.5dvh);
   width: 21.9dvw;
 
@@ -312,7 +349,7 @@ main {
     }
   }
 
-  #create-route-button {
+  .create-button {
     padding: min(1dvw, 1.5dvh) min(1.4dvw, 2dvh);
     border-radius: min(1.4dvw, 2dvh);
     background-color: #3e8de9;
@@ -406,10 +443,7 @@ main {
 
     #update-reason-text {
       height: 100%;
-      resize: none;
-      padding: min(1dvw, 1.5dvh) min(1.7dvw, 2.5dvh);
-      background-color: #e9e9e9;
-      border: none;
+      padding-inline: min(1.7dvw, 2.5dvh);
       border-radius: min(1.7dvw, 2.5dvh);
     }
   }
@@ -436,15 +470,14 @@ main {
   }
 }
 
-#route-prices {
+#route-prices,
+#job-salary {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   grid-template-rows: repeat(2, 1fr);
   gap: min(0.7dvw, 1dvh);
 
-  #price-variation,
-  #price-first,
-  #price-second {
+  section {
     padding: min(0.7dvw, 1dvh);
     gap: min(0.7dvw, 1dvh);
   }
@@ -481,6 +514,8 @@ main {
 #price-second,
 #from-period,
 #to-period,
+#from-salary,
+#to-salary,
 #precise-period {
   div {
     display: flex;
@@ -496,16 +531,42 @@ main {
   }
 }
 
-#route-color,
-#route-number-color,
-#route-stops,
-#route-map,
-#route-control-buttons,
-#time-value-type-precise-time,
-#time-interval,
-#period-value-type-precise-period,
-#period-interval {
-  display: flex;
+#from-salary,
+#to-salary {
+  div {
+    input {
+      width: min(8.3dvw, 12dvh);
+    }
+  }
+}
+
+#from-period,
+#to-period,
+#precise-period {
+  div {
+    input {
+      width: min(6.9dvw, 10dvh);
+    }
+  }
+}
+
+.modify-control-buttons {
+  padding: min(1dvw, 1.5dvh) 0;
+  gap: min(1.7dvw, 2.5dvh);
+
+  button {
+    width: 100%;
+    padding: min(1dvw, 1.5dvh) min(1.4dvw, 2dvh);
+    border-radius: min(1.4dvw, 2dvh);
+    background-color: #3e8de9;
+    color: #ffffff;
+    font-size: min(1.4dvw, 2dvh);
+    font-weight: 700;
+  }
+
+  button:first-child {
+    background-color: #e93e3e;
+  }
 }
 
 .modify-route-info {
@@ -639,23 +700,123 @@ main {
       }
     }
   }
+}
 
-  #route-control-buttons {
-    padding: min(1dvw, 1.5dvh) 0;
+.modify-job-info {
+  width: 49.3dvw;
+
+  #job-requirements {
+    height: 100%;
+    textarea {
+      height: 100%;
+    }
+  }
+
+  #job-additional-info {
+    textarea {
+      height: min(8.4dvw, 12.1dvh);
+    }
+  }
+}
+
+#journal {
+  width: 100%;
+  gap: min(1dvw, 1.5dvh);
+
+  #journal-table {
+    --table-border-radius: min(1.7dvw, 2.5dvh);
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    backface-visibility: hidden;
+
+    a:hover {
+      cursor: pointer;
+    }
+
+    thead > tr {
+      th {
+        font-weight: 600;
+        background-color: #3e8de9;
+        color: #ffffff;
+      }
+      th:first-child {
+        border-top-left-radius: var(--table-border-radius);
+      }
+      th:last-child {
+        border-top-right-radius: var(--table-border-radius);
+      }
+    }
+
+    tbody {
+      tr {
+        td {
+          font-weight: 500;
+          background-color: #e9e9e9;
+        }
+        td:last-child {
+          color: #3e8de9;
+        }
+      }
+
+      tr:last-child {
+        td:first-child {
+          border-bottom-left-radius: var(--table-border-radius);
+        }
+        td:last-child {
+          border-bottom-right-radius: var(--table-border-radius);
+        }
+      }
+    }
+
+    th,
+    td {
+      padding: min(0.7dvw, 1dvh);
+      border-style: solid;
+      border-color: #ffffff;
+      font-size: min(1.4dvw, 2dvh);
+      text-align: center;
+      border-width: min(0.2dvw, 0.25dvh);
+    }
+
+    th:first-child,
+    td:first-child,
+    th:last-child,
+    td:last-child {
+      width: 25%;
+    }
+  }
+
+  #paging-buttons {
+    padding: min(0.7dvw, 1dvh);
+    flex-direction: row-reverse;
+    align-items: center;
     gap: min(1.7dvw, 2.5dvh);
 
     button {
-      width: 100%;
-      padding: min(1dvw, 1.5dvh) min(1.4dvw, 2dvh);
-      border-radius: min(1.4dvw, 2dvh);
-      background-color: #3e8de9;
-      color: #ffffff;
-      font-size: min(1.4dvw, 2dvh);
-      font-weight: 700;
+      width: min(3.3dvw, 4.8dvh);
+      height: min(3.3dvw, 4.8dvh);
+      border-radius: min(1dvw, 1.5dvh);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      svg {
+        width: min(0.7dvw, 1.1dvh);
+        path {
+          fill: #a3a3a3;
+        }
+      }
     }
 
     button:first-child {
-      background-color: #e93e3e;
+      background-color: #3e8de9;
+
+      svg {
+        path {
+          fill: #ffffff;
+        }
+      }
     }
   }
 }

@@ -19,7 +19,7 @@
     <div class="overlay hidden" id="overlay-route-create">
       <form>
         <fieldset class="flex-column">
-          <section id="route-number-color">
+          <section class="flex-row" id="route-number-color">
             <section class="flex-column input-block" id="route-number">
               <h3>Номер маршрута:</h3>
               <input
@@ -42,7 +42,7 @@
               </div>
             </section>
           </section>
-          <section id="route-stops">
+          <section class="flex-row" id="route-stops">
             <section class="flex-column input-block" id="stop-first">
               <h3>Начальная остановка:</h3>
               <input
@@ -113,7 +113,7 @@
     <div class="overlay hidden" id="overlay-route-time">
       <form>
         <fieldset class="flex-column">
-          <section id="time-value-type-precise-time">
+          <section class="flex-row" id="time-value-type-precise-time">
             <section class="flex-column input-block" id="time-value-type">
               <h3>Тип значения:</h3>
               <div class="dropdown">
@@ -152,7 +152,7 @@
               />
             </section>
           </section>
-          <section id="time-interval">
+          <section class="flex-row" id="time-interval">
             <section class="flex-column input-block" id="from-time">
               <h3>С:</h3>
               <input
@@ -182,7 +182,7 @@
     <div class="overlay hidden" id="overlay-route-period">
       <form>
         <fieldset class="flex-column">
-          <section id="period-value-type-precise-period">
+          <section class="flex-row" id="period-value-type-precise-period">
             <section class="flex-column input-block" id="period-value-type">
               <h3>Тип интервала:</h3>
               <div class="dropdown">
@@ -224,7 +224,7 @@
               </div>
             </section>
           </section>
-          <section id="period-interval">
+          <section class="flex-row" id="period-interval">
             <section class="flex-column input-block" id="from-period">
               <h3>От:</h3>
               <div>
@@ -270,7 +270,7 @@
     </div>
     <div class="main-content">
       <nav class="flex-column">
-        <button>
+        <button onclick="location.href = 'traffic.html'">
           <svg
             viewBox="0 0 24 24"
             fill="none"
@@ -282,7 +282,7 @@
           </svg>
           <p>Движение</p>
         </button>
-        <button class="active-tab">
+        <button class="active-tab" onclick="location.href = 'routes.html'">
           <svg
             viewBox="0 0 24 24"
             fill="none"
@@ -306,7 +306,7 @@
           </svg>
           <p>Маршруты</p>
         </button>
-        <button>
+        <button onclick="location.href = 'requests.html'">
           <svg
             viewBox="0 0 24 24"
             fill="none"
@@ -320,7 +320,7 @@
           </svg>
           <p>Обращения</p>
         </button>
-        <button>
+        <button onclick="location.href = 'jobs.html'">
           <svg
             viewBox="0 0 24 24"
             fill="none"
@@ -335,7 +335,7 @@
           </svg>
           <p>Вакансии</p>
         </button>
-        <button>
+        <button onclick="location.href = 'journal.html'">
           <svg
             viewBox="0 0 24 24"
             fill="none"
@@ -353,7 +353,7 @@
           </svg>
           <p>Журнал</p>
         </button>
-        <button>
+        <button onclick="location.href = 'users.html'">
           <svg
             viewBox="0 0 24 24"
             fill="none"
@@ -410,10 +410,12 @@
               </svg>
             </article>
           </section>
-          <button id="create-route-button">Создать</button>
+          <button class="create-button" id="create-route-button">
+            Создать
+          </button>
         </section>
         <section class="modify-route-info flex-column">
-          <section id="route-color">
+          <section class="flex-row" id="route-color">
             <section class="flex-column input-block" id="color-pick">
               <h3>Цвет маршрута</h3>
               <div id="color-input">
@@ -430,7 +432,7 @@
               <div>114</div>
             </section>
           </section>
-          <section id="route-stops">
+          <section class="flex-row" id="route-stops">
             <section class="flex-column input-block" id="stop-first">
               <h3>Начальная остановка:</h3>
               <input
@@ -491,7 +493,7 @@
               </div>
             </section>
           </section>
-          <section id="route-map">
+          <section class="flex-row" id="route-map">
             <section class="flex-column input-block" id="map-variation">
               <h3>Вариации карты:</h3>
               <div class="dropdown">
@@ -565,12 +567,18 @@
               </tfoot>
             </table>
           </section>
-          <section id="route-control-buttons">
+          <section
+            class="flex-row modify-control-buttons"
+            id="route-control-buttons"
+          >
             <button>Удалить</button>
             <button>Сохранить</button>
           </section>
         </section>
       </main>
     </div>
+
+    <!--Dropdowns-->
+    <script src="../assets/scripts/dropdowns.js"></script>
   </body>
 </html>
