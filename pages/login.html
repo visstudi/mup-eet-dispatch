@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>ЭЭТ</title>
+  <link rel="stylesheet" href="../assets/styles/login.css">
+</head>
+<body>
+
+  <div class="login-container">
+    <div class="logo-wrapper">
+      <img id="logo-img" src="../assets/icons/logo-light.svg" alt="Логотип" class="logo-image">
+    </div>
+
+    <div class="login-card">
+      <form id="loginForm">
+        <div class="input-group">
+          <label>Логин</label>
+          <input type="text" id="login" placeholder="exampledriver" required>
+        </div>
+        <div class="input-group">
+          <label>Пароль</label>
+          <input type="password" id="password" placeholder="••••••••••••" required>
+        </div>
+        <div id="error-message"></div>
+        <button type="submit" id="submit-btn" class="submit-btn">Войти</button>
+      </form>
+    </div>
+  </div>
+
+  <script src="../assets/scripts/auth.js"></script>
+</body>
+</html>
