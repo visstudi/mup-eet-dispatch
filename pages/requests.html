@@ -120,8 +120,113 @@
           <p>Пользователи</p>
         </button>
       </nav>
-      <main></main>
+       <main>
+        <section class="flex-column" id="requests-section" style="width: 100%; gap: 20px;">
+          
+          <section class="flex-row" id="requests-top-bar" style="justify-content: space-between; align-items: center;">
+            <button class="create-button" id="btn-create-request" style="background-color: #3e8de9; color: white; padding: 10px 20px; border-radius: 10px; font-weight: 600; cursor: pointer;">
+              + Зарегистрировать обращение
+            </button>
+            
+            <label style="display: flex; align-items: center; gap: 10px; font-weight: 600; cursor: pointer;">
+              Только необработанные
+              <input type="checkbox" id="filter-only-new" style="width: 18px; height: 18px;">
+            </label>
+          </section>
+
+          <div class="table-container" id="requests-table-container">
+            <table id="requests-table">
+              <thead>
+                <tr>
+                  <th style="text-align: left;">Обращение</th>
+                  <th style="text-align: center;">Дата</th>
+                </tr>
+              </thead>
+              <tbody>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <div class="overlay hidden" id="overlay-request-details">
+          <form style="width: 100%; max-width: 600px;">
+            <fieldset class="flex-column" style="gap: 15px; border: none;">
+              
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                <section class="flex-column input-block" style="padding: 0;">
+                  <h3>ФИО:</h3>
+                  <input type="text" class="text-number-input" id="req-fio" placeholder="Иванов И. И." style="width: 100%;" />
+                </section>
+                <section class="flex-column input-block" style="padding: 0;">
+                  <h3>Тема обращения:</h3>
+                  <input type="text" class="text-number-input" id="req-title" placeholder="Тема..." style="width: 100%;" />
+                </section>
+              </div>
+
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                <section class="flex-column input-block" style="padding: 0;">
+                  <h3>Телефон:</h3>
+                  <input type="text" class="text-number-input" id="req-phone" placeholder="+7..." style="width: 100%;" />
+                </section>
+                <section class="flex-column input-block" style="padding: 0;">
+                  <h3>Дата и время:</h3>
+                  <input type="datetime-local" class="text-number-input" id="req-datetime" style="width: 100%;" />
+                </section>
+              </div>
+
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                <section class="flex-column input-block" style="padding: 0;">
+                  <h3>Борт. номер:</h3>
+                  <input type="text" class="text-number-input" id="req-bort" placeholder="0000" style="width: 100%;" />
+                </section>
+                <section class="flex-column input-block" style="padding: 0;">
+                  <h3>Вид обращения:</h3>
+                  <div class="dropdown" id="req-type-dropdown">
+                    <button class="dropdown-button" type="button" style="width: 100%;">
+                      <p class="dropdown-choice">Жалоба</p>
+                      <svg viewBox="0 0 14 7" fill="none" style="width: 10px;"><path d="M0 0L7 7L14 0" stroke="black"/></svg>
+                    </button>
+                    <div class="dropdown-content">
+                      <div data-val="0">Жалоба</div>
+                      <div data-val="1">Предложение</div>
+                      <div data-val="2">Отклик на вакансию</div>
+                      <div data-val="3">Прочее</div>
+                    </div>
+                  </div>
+                </section>
+              </div>
+
+              <section class="flex-column input-block" style="padding: 0;">
+                <h3>Текст обращения:</h3>
+                <textarea id="req-text" style="height: 150px; width: 100%;"></textarea>
+              </section>
+
+              <div style="display: grid; grid-template-columns: 1fr 1.5fr 1fr; gap: 15px; align-items: center; margin-top: 20px;">
+                  <button type="button" id="btn-close-req" style="height: 48px; border-radius: 12px; background: #e0e0e0; font-weight: 700; cursor: pointer;">
+                      Закрыть
+                  </button>
+                  
+                  <div class="dropdown" id="req-status-dropdown" style="height: 48px;">
+                      <button class="dropdown-button" type="button" style="height: 100%; border-radius: 12px;">
+                          <p class="dropdown-choice">Не обработано</p>
+                          <svg viewBox="0 0 14 7" fill="none" style="width: 12px;"><path d="M0 0L7 7L14 0" stroke="black" stroke-width="2"/></svg>
+                      </button>
+                      <div class="dropdown-content">
+                          <div data-read="false">Не обработано</div>
+                          <div data-read="true">Обработано</div>
+                      </div>
+                  </div>
+
+                  <button type="submit" style="height: 48px; background-color: #3e8de9; color: white; border-radius: 12px; font-weight: 700; cursor: pointer;">
+                      Сохранить
+                  </button>
+              </div>
+            </fieldset>
+          </form>
+        </div>
+      </main>
     </div>
+    <script src="../assets/scripts/requests.js"></script>
     <script src="../assets/scripts/navigation.js"></script>
   </body>
 </html>
