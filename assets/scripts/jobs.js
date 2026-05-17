@@ -43,20 +43,42 @@ function renderList() {
     });
 }
 
+function getScheduleText(val) {
+    if (val === 0) return "Сменный";
+    if (val === 1) return "5/2";
+    if (val === 2) return "По графику";
+    return "По графику";
+}
+
+function getSalaryTypeText(val) {
+    if (val === 0) return "Фиксированная";
+    if (val === 1) return "От";
+    if (val === 2) return "От - До";
+    if (val === 3) return "Сдельная";
+    return "От - До";
+}
+
 function updateSalaryUI(typeVal, container) {
     const fromField = container.querySelector('#from-salary');
     const toField = container.querySelector('#to-salary');
-
-    if (fromField) fromField.style.display = 'flex';
-    if (toField) toField.style.display = 'flex';
+    const salaryRow = container.querySelector('#salary-inputs-row') || container.querySelector('#job-salary');
 
     if (typeVal === 3) {
         if (fromField) fromField.style.display = 'none';
         if (toField) toField.style.display = 'none';
-    } else if (typeVal === 1) { // От
-        if (fromField) fromField.style.display = 'flex';
+    } else if (typeVal === 0 || typeVal === 1) { 
+        if (fromField) {
+            fromField.style.display = 'flex';
+            fromField.querySelector('h3').textContent = (typeVal === 0) ? "Оклад:" : "От:";
+        }
         if (toField) toField.style.display = 'none';
-    } 
+    } else { 
+        if (fromField) {
+            fromField.style.display = 'flex';
+            fromField.querySelector('h3').textContent = "От:";
+        }
+        if (toField) toField.style.display = 'flex';
+    }
 }
 
 function selectJob(id) {
@@ -72,19 +94,17 @@ function fillData(container, data) {
     container.querySelector('#from-salary input').value = data.salaryMin || 0;
     container.querySelector('#to-salary input').value = data.salaryMax || 0;
     
-    if(container.querySelector('#job-requirements textarea'))
-        container.querySelector('#job-requirements textarea').value = data.requirements || '';
-    if(container.querySelector('#job-additional-info textarea'))
-        container.querySelector('#job-additional-info textarea').value = data.additionalInfo || '';
+    const reqs = container.querySelector('#job-requirements textarea');
+    const info = container.querySelector('#job-additional-info textarea');
+    if(reqs) reqs.value = data.requirements || '';
+    if(info) info.value = data.additionalInfo || '';
 
-    const schedText = data.workSchedule === 0 ? "Сменный" : "По графику";
     const schedDrop = container.querySelector('#job-schedule .dropdown');
-    schedDrop.querySelector('.dropdown-choice').textContent = schedText;
+    schedDrop.querySelector('.dropdown-choice').textContent = getScheduleText(data.workSchedule);
     schedDrop.setAttribute('data-value', data.workSchedule);
 
-    const salTexts = {1: "От", 2: "От - До", 3: "Сдельная"};
     const salDrop = container.querySelector('#salary-type .dropdown');
-    salDrop.querySelector('.dropdown-choice').textContent = salTexts[data.salaryType] || "От - До";
+    salDrop.querySelector('.dropdown-choice').textContent = getSalaryTypeText(data.salaryType);
     salDrop.setAttribute('data-value', data.salaryType);
 
     updateSalaryUI(data.salaryType, container);
@@ -98,7 +118,7 @@ async function handleSave(isNew) {
     let sMax = parseInt(container.querySelector('#to-salary input').value) || 0;
     
     if (salType === 3) { sMin = 0; sMax = 0; } 
-    else if (salType === 1) { sMax = 0; }
+    else if (salType === 1 || salType === 0) { sMax = 0; }
 
     const payload = {
         profession: container.querySelector('#job-title input').value.trim(),
@@ -114,7 +134,7 @@ async function handleSave(isNew) {
     try {
         await apiCall(isNew ? '/Vacancy/create' : '/Vacancy/edit', isNew ? 'POST' : 'PATCH', payload);
         if (isNew) document.getElementById('overlay-job-create').classList.add('hidden');
-        alert("Успешно сохранено!");
+        alert("Сохранено!");
         await fetchJobs();
     } catch (e) { alert("Ошибка: " + e.message); }
 }
@@ -124,7 +144,7 @@ function initUI() {
         btn.onclick = () => {
             const menu = btn.nextElementSibling;
             document.querySelectorAll('.dropdown-content').forEach(c => { if(c!==menu) c.style.maxHeight = null; });
-            menu.style.maxHeight = menu.style.maxHeight ? null : "150px";
+            menu.style.maxHeight = menu.style.maxHeight ? null : "200px";
         };
     });
 
@@ -136,9 +156,13 @@ function initUI() {
             drop.querySelector('.dropdown-choice').textContent = txt;
             
             let val = 0;
-            if (drop.closest('#job-schedule')) val = (txt === "Сменный" ? 0 : 2);
+            if (drop.closest('#job-schedule')) {
+                const sMap = {"Сменный": 0, "5/2": 1, "По графику": 2};
+                val = sMap[txt] || 0;
+            }
             if (drop.closest('#salary-type')) {
-                val = (txt === "От" ? 1 : txt === "От - До" ? 2 : 3);
+                const tMap = {"Фиксированная": 0, "От": 1, "От - До": 2, "Сдельная": 3};
+                val = tMap[txt] !== undefined ? tMap[txt] : 2;
                 updateSalaryUI(val, div.closest('form') || div.closest('.modify-job-info'));
             }
             drop.setAttribute('data-value', val);
@@ -149,7 +173,7 @@ function initUI() {
     document.getElementById('create-job-button').onclick = () => {
         const o = document.getElementById('overlay-job-create');
         o.querySelector('form').reset();
-        fillData(o, { salaryType: 2, workSchedule: 2, salaryMin: 0, salaryMax: 0 });
+        fillData(o, { salaryType: 2, workSchedule: 2 });
         o.classList.remove('hidden');
     };
 
