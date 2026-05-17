@@ -50,7 +50,7 @@
                   <div></div>
                   <div>Водитель</div>
                   <div>Диспетчер</div>
-                  <div>...</div>
+                  <div>Администратор</div>
                 </div>
               </div>
             </section>
@@ -126,12 +126,15 @@
                 <div class="dropdown-content">
                   <div></div>
                   <div>Активная</div>
-                  <div>...</div>
+                  <div>Неактивная</div>
                 </div>
               </div>
             </section>
             <span></span>
           </section>
+          <div id="user-error-message" style="color: #e93e3e; font-size: min(1.1dvw, 1.6dvh); font-weight: 600; text-align: center; display: none;">
+            Не удалось сохранить изменения
+          </div>
           <section class="form-control-buttons">
             <button type="button">Закрыть</button>
             <button type="submit">Сохранить</button>
@@ -280,7 +283,8 @@
               </svg>
             </div>
           </section>
-          <table id="users-table">
+          <div class="table-container">
+            <table id="users-table">
             <thead>
               <tr>
                 <th>ID</th>
@@ -300,11 +304,13 @@
               </tr>
             </tbody>
           </table>
+          </div>
         </section>
       </main>
     </div>
-
+    <script src="../assets/scripts/users.js"></script>
+    <script src="../assets/scripts/navigation.js"></script>
     <!--Dropdowns-->
-    <script src="../assets/scripts/dropdowns.js"></script>
+    <!--<script src="../assets/scripts/dropdowns.js"></script>-->
   </body>
 </html>

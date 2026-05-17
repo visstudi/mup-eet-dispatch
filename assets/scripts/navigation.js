@@ -1,8 +1,8 @@
 document.addEventListener('DOMContentLoaded', () => {
     const navButtons = document.querySelectorAll('nav button');
     const pages = [
-        'traffic.html', 'routes.html', 'appeals.html', 
-        'vacancies.html', 'logs.html', 'users.html'
+        'traffic.html', 'routes.html', 'requests.html', 
+        'jobs.html', 'journal.html', 'users.html'
     ];
 
     navButtons.forEach((btn, index) => {

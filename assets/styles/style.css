@@ -1008,3 +1008,38 @@ main {
     height: 16px;
     cursor: pointer;
 }
+
+#users {
+    height: calc(100vh - min(7.6dvw, 11dvh) - min(2dvw, 3dvh)); 
+    overflow: hidden; 
+}
+
+.table-container {
+    overflow-y: auto;
+    border-radius: min(1.7dvw, 2.5dvh);
+    background-color: #e9e9e9;
+    max-height: calc(100vh - min(7.6dvw, 11dvh) - min(2dvw, 3dvh) - 100px); /* 100px - примерная высота поиска */
+}
+
+#users-table thead th {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.user-inactive td {
+    opacity: 0.6;
+}
+
+#users-table a {
+    text-decoration: none;
+    font-weight: 700;
+}
+
+.user-inactive td {
+    opacity: 0.6;
+}
+
+.user-inactive td:last-child {
+    opacity: 1 !important;
+}
