@@ -1043,3 +1043,14 @@ main {
 .user-inactive td:last-child {
     opacity: 1 !important;
 }
+
+#journal {
+    height: calc(100vh - min(7.6dvw, 11dvh) - min(2dvw, 3dvh)); 
+    overflow: hidden; 
+}
+
+#journal-table thead th {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
