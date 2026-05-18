@@ -1,4 +1,3 @@
-const API_URL = ""; 
 const REDIRECT_URL = "../pages/routes.html"; 
 
 document.addEventListener('DOMContentLoaded', () => {

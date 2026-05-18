@@ -1,4 +1,3 @@
-const API_URL = "";
 let allLogs = [];
 let usersMap = {};
 

@@ -1,4 +1,3 @@
-const API_URL = "";
 let allRequests = [];
 let isCreateMode = false;
 let currentRequestId = null;

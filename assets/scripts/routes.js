@@ -1,4 +1,3 @@
-const API_URL = "";
 let allRoutes = []; 
 let currentRouteData = null; 
 let tempScheduleItem = {}; 

@@ -1,4 +1,3 @@
-const API_URL = "";
 let allUsers = [];
 let editingUserId = null; 
 

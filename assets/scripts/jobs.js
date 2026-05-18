@@ -1,4 +1,3 @@
-const API_URL = "";
 let allJobs = [];
 let currentJobId = null;
 

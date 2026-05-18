@@ -1,5 +1,3 @@
-const API_BASE = "";
-
 (async function initAuth() {
     const rawToken = localStorage.getItem('auth_token');
     const page = window.location.pathname.split('/').pop() || 'traffic.html';
@@ -13,7 +11,7 @@ const API_BASE = "";
 
     try {
         const cleanToken = rawToken.replace(/^["']|["']$/g, '').trim();
-        const response = await fetch(`${API_BASE}/Authorization/getMe`, {
+        const response = await fetch(`${API_URL}/Authorization/getMe`, {
             method: 'GET',
             headers: { 'Accept': '*/*', 'Authorization': cleanToken }
         });

@@ -1,4 +1,3 @@
-const API_URL = "";
 let allRoutes = [];
 let selectedRoutes = new Set(); 
 let newState = true; 
