@@ -1133,23 +1133,22 @@ body #requests-table thead th:last-child {
 }
 
 body #requests-table tbody tr {
-    background-color: #e9e9e9 !important;
+    background-color: #e9e9e9 !important; 
     cursor: pointer;
+    transition: background-color 0.2s;
 }
 
 body #requests-table tbody tr:hover {
     background-color: #dbdbdb !important;
 }
 
-body #requests-table tr.read-request {
-    background-color: #ffffff !important;
-}
 
 body #requests-table td {
     padding: min(0.7dvw, 1dvh);
-    border-top: min(0.2dvw, 0.25dvh) solid #ffffff !important;
+    border-top: min(0.2dvw, 0.25dvh) solid #ffffff !important; 
     font-size: min(1.4dvw, 2dvh);
     text-align: center;
+    vertical-align: middle;
 }
 
 body #requests-table td:first-child {
