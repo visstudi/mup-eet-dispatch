@@ -125,61 +125,83 @@
       <main>
         <section class="flex-column" id="journal">
           <div class="table-container">
-          <table id="journal-table">
-            <thead>
-              <tr>
-                <th>Дата и время</th>
-                <th>Событие</th>
-                <th>Отчет</th>
-              </tr>
-            </thead>
-            <tbody>
-            </tbody>
-          </table>
+            <table id="journal-table">
+              <thead>
+                <tr>
+                  <th>Дата и время</th>
+                  <th>Событие</th>
+                  <th>Отчет</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
           </div>
         </section>
         <div class="overlay hidden" id="overlay-log-details">
-            <form class="journal-modal">
-                <fieldset class="flex-column">
-                    
-                    <div class="modal-row">
-                        <div class="input-block">
-                            <label>ФИО:</label>
-                            <input type="text" id="log-user-name" disabled />
-                        </div>
-                        <div class="input-block">
-                            <label>ID:</label>
-                            <input type="text" id="log-user-id" disabled />
-                        </div>
-                    </div>
+          <form class="journal-modal">
+            <fieldset class="flex-column">
+              <div class="modal-row">
+                <div class="input-block">
+                  <label>ФИО:</label>
+                  <input
+                    class="text-number-input"
+                    type="text"
+                    id="log-user-name"
+                    disabled
+                  />
+                </div>
+                <div class="input-block">
+                  <label>ID:</label>
+                  <input
+                    class="text-number-input"
+                    type="text"
+                    id="log-user-id"
+                    disabled
+                  />
+                </div>
+              </div>
 
-                    <div class="modal-row">
-                        <div class="input-block">
-                            <label>Должность:</label>
-                            <input type="text" id="log-user-role" disabled />
-                        </div>
-                        <div class="input-block">
-                            <label>Дата и время события:</label>
-                            <input type="text" id="log-time" disabled />
-                        </div>
-                    </div>
+              <div class="modal-row">
+                <div class="input-block">
+                  <label>Должность:</label>
+                  <input
+                    class="text-number-input"
+                    type="text"
+                    id="log-user-role"
+                    disabled
+                  />
+                </div>
+                <div class="input-block">
+                  <label>Дата и время события:</label>
+                  <input
+                    class="text-number-input"
+                    type="text"
+                    id="log-time"
+                    disabled
+                  />
+                </div>
+              </div>
 
-                    <div class="input-block full-width">
-                        <label>Событие:</label>
-                        <input type="text" id="log-action" disabled />
-                    </div>
+              <div class="input-block full-width">
+                <label>Событие:</label>
+                <input
+                  class="text-number-input"
+                  type="text"
+                  id="log-action"
+                  disabled
+                />
+              </div>
 
-                    <div class="input-block full-width">
-                        <label>Подробности:</label>
-                        <textarea id="log-details-text" disabled></textarea>
-                    </div>
+              <div class="input-block full-width">
+                <label>Подробности:</label>
+                <textarea id="log-details-text" disabled></textarea>
+              </div>
 
-                    <div class="modal-footer">
-                        <button type="button" id="close-log-btn">Закрыть</button>
-                    </div>
-                    
-                </fieldset>
-            </form>
+              <div class="modal-footer">
+                <button type="button" id="close-log-btn">Закрыть</button>
+              </div>
+            </fieldset>
+          </form>
         </div>
       </main>
     </div>

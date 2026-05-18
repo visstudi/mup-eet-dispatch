@@ -19,20 +19,33 @@
       </div>
     </header>
     <div class="overlay hidden" id="overlay-job-create">
-      <form style="width: min(45dvw, 65dvh);">
-        <fieldset class="flex-column" style="gap: 15px;">
-          
-          <section class="flex-row" style="gap: 15px;">
-            <section class="flex-column input-block" id="job-title" style="width: 50%;">
+      <form style="width: min(45dvw, 65dvh)">
+        <fieldset class="flex-column" style="gap: 15px">
+          <section class="flex-row" style="gap: 15px">
+            <section
+              class="flex-column input-block"
+              id="job-title"
+              style="width: 50%"
+            >
               <h3>Профессия:</h3>
-              <input type="text" class="text-number-input" placeholder="Введите текст..." />
+              <input
+                type="text"
+                class="text-number-input"
+                placeholder="Введите текст..."
+              />
             </section>
-            <section class="flex-column input-block" id="job-schedule" style="width: 50%;">
+            <section
+              class="flex-column input-block"
+              id="job-schedule"
+              style="width: 50%"
+            >
               <h3>График работы:</h3>
               <div class="dropdown">
                 <button class="dropdown-button" type="button">
                   <p class="dropdown-choice">По графику</p>
-                  <svg viewBox="0 0 14 7" fill="none"><path d="M0 0L7 7L14 0" stroke="black" /></svg>
+                  <svg viewBox="0 0 14 7" fill="none">
+                    <path d="M0 0L7 7L14 0" stroke="black" />
+                  </svg>
                 </button>
                 <div class="dropdown-content">
                   <div></div>
@@ -44,12 +57,18 @@
             </section>
           </section>
 
-          <section class="flex-column input-block" id="salary-type" style="width: 50%;">
+          <section
+            class="flex-column input-block"
+            id="salary-type"
+            style="width: 50%"
+          >
             <h3>Вид з/п:</h3>
             <div class="dropdown">
               <button class="dropdown-button" type="button">
                 <p class="dropdown-choice">От - До</p>
-                <svg viewBox="0 0 14 7" fill="none"><path d="M0 0L7 7L14 0" stroke="black" /></svg>
+                <svg viewBox="0 0 14 7" fill="none">
+                  <path d="M0 0L7 7L14 0" stroke="black" />
+                </svg>
               </button>
               <div class="dropdown-content">
                 <div></div>
@@ -61,36 +80,49 @@
             </div>
           </section>
 
-          <section class="flex-row" id="salary-inputs-row" style="gap: 15px;">
-            <section class="flex-column" id="from-salary" style="width: 50%;">
+          <section class="flex-row" id="salary-inputs-row" style="gap: 15px">
+            <section class="flex-column" id="from-salary" style="width: 50%">
               <h3>От:</h3>
-              <div class="flex-row" style="align-items: center; gap: 10px;">
-                <input type="text" class="text-number-input" style="width: 100%;" /> 
-                <span style="font-weight: 600;">руб.</span>
+              <div class="flex-row" style="align-items: center; gap: 10px">
+                <input
+                  type="text"
+                  class="text-number-input"
+                  style="width: 100%"
+                />
+                <span style="font-weight: 600">руб.</span>
               </div>
             </section>
-            <section class="flex-column" id="to-salary" style="width: 50%;">
+            <section class="flex-column" id="to-salary" style="width: 50%">
               <h3>До:</h3>
-              <div class="flex-row" style="align-items: center; gap: 10px;">
-                <input type="text" class="text-number-input" style="width: 100%;" />
-                <span style="font-weight: 600;">руб.</span>
+              <div class="flex-row" style="align-items: center; gap: 10px">
+                <input
+                  type="text"
+                  class="text-number-input"
+                  style="width: 100%"
+                />
+                <span style="font-weight: 600">руб.</span>
               </div>
             </section>
           </section>
 
           <section class="flex-column input-block" id="job-requirements">
             <h3>Требования:</h3>
-            <textarea style="height: 100px;"></textarea>
+            <textarea style="height: 100px"></textarea>
           </section>
 
           <section class="flex-column input-block" id="job-additional-info">
             <h3>Доп. информация:</h3>
-            <textarea style="height: 80px;"></textarea>
+            <textarea style="height: 80px"></textarea>
           </section>
 
           <section class="form-control-buttons">
             <button type="button">Закрыть</button>
-            <button type="submit" style="background-color: #3e8de9; color: white;">Сохранить</button>
+            <button
+              type="submit"
+              style="background-color: #3e8de9; color: white"
+            >
+              Сохранить
+            </button>
           </section>
         </fieldset>
       </form>

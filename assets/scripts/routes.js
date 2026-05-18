@@ -1,4 +1,3 @@
-const API_URL = "";
 let allRoutes = [];
 let currentRouteData = null;
 let tempScheduleItem = {};
@@ -65,7 +64,7 @@ function renderRouteList() {
   allRoutes.forEach((route) => {
     const art = document.createElement("article");
     art.className = `list-entry ${currentRouteData?.name === route.name ? "active" : ""}`;
-    art.innerHTML = `<h4>Маршрут ${route.name}</h4><p>[${route.fromStation || ""} - ${route.toStation || ""}]</p><img src="../assets/icons/right.svg" alt="" />`;
+    art.innerHTML = `<div class="route-info"><h4>Маршрут ${route.name}</h4><p>[${route.fromStation || ""} - ${route.toStation || ""}]</p></div><img src="../assets/icons/right.svg" alt="" />`;
     art.onclick = () => selectRoute(route.name);
     container.appendChild(art);
   });
@@ -294,7 +293,9 @@ function initUI() {
       document.querySelectorAll(".dropdown-content").forEach((c) => {
         if (c !== menu) c.style.maxHeight = null;
       });
-      menu.style.maxHeight = menu.style.maxHeight ? null : "150px";
+      menu.style.maxHeight = menu.style.maxHeight
+        ? null
+        : `${menu.scrollHeight}px`;
     };
   });
   document

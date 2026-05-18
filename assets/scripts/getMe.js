@@ -1,71 +1,73 @@
 (async function initAuth() {
-    const rawToken = localStorage.getItem('auth_token');
-    const page = window.location.pathname.split('/').pop() || 'traffic.html';
+  const rawToken = localStorage.getItem("auth_token");
+  const page = window.location.pathname.split("/").pop() || "traffic.html";
 
-    if (page.includes('login.html')) return;
+  if (page.includes("login.html")) return;
 
-    if (!rawToken || rawToken === "undefined" || rawToken === "null") {
-        window.location.href = 'login.html';
-        return;
+  if (!rawToken || rawToken === "undefined" || rawToken === "null") {
+    window.location.href = "login.html";
+    return;
+  }
+
+  try {
+    const cleanToken = rawToken.replace(/^["']|["']$/g, "").trim();
+    const response = await fetch(`${API_URL}/Authorization/getMe`, {
+      method: "GET",
+      headers: { Accept: "*/*", Authorization: cleanToken },
+    });
+
+    if (!response.ok) throw new Error("Unauthorized");
+
+    const user = await response.json();
+    window.currentUser = user;
+
+    const role = user.permLevel;
+    if (role === 2 && !page.includes("traffic.html")) {
+      window.location.href = "traffic.html";
+    } else if (role === 1 && page.includes("users.html")) {
+      window.location.href = "traffic.html";
     }
 
-    try {
-        const cleanToken = rawToken.replace(/^["']|["']$/g, '').trim();
-        const response = await fetch(`${API_URL}/Authorization/getMe`, {
-            method: 'GET',
-            headers: { 'Accept': '*/*', 'Authorization': cleanToken }
-        });
-
-        if (!response.ok) throw new Error("Unauthorized");
-
-        const user = await response.json();
-        window.currentUser = user; 
-
-        const role = user.permLevel; 
-        if (role === 2 && !page.includes('traffic.html')) {
-            window.location.href = 'traffic.html';
-        } else if (role === 1 && page.includes('users.html')) {
-            window.location.href = 'traffic.html';
-        }
-
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', () => setupUI(role));
-        } else {
-            setupUI(role);
-        }
-
-    } catch (e) {
-        localStorage.removeItem('auth_token');
-        window.location.href = 'login.html';
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", () => setupUI(role));
+    } else {
+      setupUI(role);
     }
+  } catch (e) {
+    localStorage.removeItem("auth_token");
+    window.location.href = "login.html";
+  }
 })();
 
 function setupUI(role) {
-    renderUserWidget();
-    hideUnauthorizedNav(role);
+  renderUserWidget();
+  hideUnauthorizedNav(role);
 }
 
 function hideUnauthorizedNav(role) {
-    const navButtons = document.querySelectorAll('nav button');
-    if (role === 2) { // Водитель
-        navButtons.forEach((btn, i) => { if (i > 0) btn.style.display = 'none'; });
-    } else if (role === 1) { 
-        if (navButtons[5]) navButtons[5].style.display = 'none';
-    }
+  const navButtons = document.querySelectorAll("nav button");
+  if (role === 2) {
+    // Водитель
+    navButtons.forEach((btn, i) => {
+      if (i > 0) btn.style.display = "none";
+    });
+  } else if (role === 1) {
+    if (navButtons[5]) navButtons[5].style.display = "none";
+  }
 }
 
 function renderUserWidget() {
-    const header = document.querySelector('header');
-    if (!header || document.getElementById('user-profile-widget')) return;
+  const header = document.querySelector("header");
+  if (!header || document.getElementById("user-profile-widget")) return;
 
-    const user = window.currentUser;
-    const roles = { 0: "Администратор", 1: "Диспетчер", 2: "Водитель" };
+  const user = window.currentUser;
+  const roles = { 0: "Администратор", 1: "Диспетчер", 2: "Водитель" };
 
-    const container = document.createElement('div');
-    container.id = 'user-profile-widget';
-    container.className = 'user-widget-container';
-    
-    container.innerHTML = `
+  const container = document.createElement("div");
+  container.id = "user-profile-widget";
+  container.className = "user-widget-container";
+
+  container.innerHTML = `
         <div class="user-card" id="userCard">
             <div class="user-card-header">
                 <div class="user-card-names">
@@ -83,21 +85,21 @@ function renderUserWidget() {
         </div>
     `;
 
-    header.appendChild(container);
+  header.appendChild(container);
 
-    const card = document.getElementById('userCard');
-    
-    card.onclick = (e) => {
-        if (e.target.closest('#logoutBtn')) return;
-        card.classList.toggle('expanded');
-    };
+  const card = document.getElementById("userCard");
 
-    document.getElementById('logoutBtn').onclick = () => {
-        localStorage.removeItem('auth_token');
-        window.location.href = 'login.html';
-    };
+  card.onclick = (e) => {
+    if (e.target.closest("#logoutBtn")) return;
+    card.classList.toggle("expanded");
+  };
 
-    document.addEventListener('click', (e) => {
-        if (!container.contains(e.target)) card.classList.remove('expanded');
-    });
+  document.getElementById("logoutBtn").onclick = () => {
+    localStorage.removeItem("auth_token");
+    window.location.href = "login.html";
+  };
+
+  document.addEventListener("click", (e) => {
+    if (!container.contains(e.target)) card.classList.remove("expanded");
+  });
 }
