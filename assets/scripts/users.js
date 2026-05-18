@@ -39,6 +39,7 @@ async function fetchUsers() {
     try {
         const data = await apiCall('/Authorization/getAllUsers');
         allUsers = Array.isArray(data) ? data : [];
+        allUsers.sort((a, b) => b.id - a.id);
         renderUsersTable(allUsers);
     } catch (e) { console.error("Ошибка загрузки", e); }
 }

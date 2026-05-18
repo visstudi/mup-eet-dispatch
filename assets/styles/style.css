@@ -1388,3 +1388,81 @@ header {
     gap: 8px;
     cursor: pointer;
 }
+
+#overlay-log-details.overlay {
+    background-color: rgba(0, 0, 0, 0.6) !important;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.journal-modal {
+    background-color: #ffffff !important; 
+    width: 550px !important; 
+    max-width: 95vw;
+    padding: 30px !important;
+    border-radius: 25px !important;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+}
+
+.modal-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    width: 100%;
+}
+
+.journal-modal label {
+    font-size: min(1.7dvw, 2.4dvh);
+    font-weight: 800 !important;
+    color: #000000 !important;
+    margin-bottom: 8px !important;
+    display: block;
+}
+
+.journal-modal input, 
+.journal-modal textarea {
+    background-color: #f0f0f0 !important;
+    border: none !important;
+    border-radius: 12px !important;
+    padding: 10px 15px !important;
+    font-size: 14px !important;
+    color: #333 !important;
+    width: 100% !important;
+}
+
+.journal-modal input {
+    height: 40px !important;
+}
+
+.journal-modal textarea {
+    height: 150px !important;
+    resize: none !important;
+    font-family: sans-serif !important;
+}
+
+.full-width {
+    width: 100% !important;
+    margin-top: 10px;
+}
+
+.modal-footer {
+    margin-top: 25px;
+    width: 100%;
+}
+
+#close-log-btn {
+    background-color: #3e8de9 !important;
+    color: #ffffff !important;
+    width: 100%;
+    padding: 15px !important;
+    border-radius: 15px !important;
+    font-weight: 700 !important;
+    font-size: 16px !important;
+    cursor: pointer;
+    border: none !important;
+}
+
+#close-log-btn:hover {
+    background-color: #2b77cc !important;
+}

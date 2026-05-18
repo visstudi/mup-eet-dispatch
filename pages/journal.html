@@ -139,47 +139,47 @@
           </div>
         </section>
         <div class="overlay hidden" id="overlay-log-details">
-            <fieldset class="flex-column" style="gap: 15px;">
-              
-              <!-- Первый ряд -->
-              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-                <section class="flex-column input-block" style="padding: 0;">
-                  <h3>ФИО:</h3>
-                  <input type="text" class="text-number-input" id="log-user-name" disabled style="width: 100%;" />
-                </section>
-                <section class="flex-column input-block" style="padding: 0;">
-                  <h3>ID:</h3>
-                  <input type="text" class="text-number-input" id="log-user-id" disabled style="width: 100%;" />
-                </section>
-              </div>
+            <form class="journal-modal">
+                <fieldset class="flex-column">
+                    
+                    <div class="modal-row">
+                        <div class="input-block">
+                            <label>ФИО:</label>
+                            <input type="text" id="log-user-name" disabled />
+                        </div>
+                        <div class="input-block">
+                            <label>ID:</label>
+                            <input type="text" id="log-user-id" disabled />
+                        </div>
+                    </div>
 
-              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-                <section class="flex-column input-block" style="padding: 0;">
-                  <h3>Должность:</h3>
-                  <input type="text" class="text-number-input" id="log-user-role" disabled style="width: 100%;" />
-                </section>
-                <section class="flex-column input-block" style="padding: 0;">
-                  <h3>Дата и время события:</h3>
-                  <input type="text" class="text-number-input" id="log-time" disabled style="width: 100%;" />
-                </section>
-              </div>
+                    <div class="modal-row">
+                        <div class="input-block">
+                            <label>Должность:</label>
+                            <input type="text" id="log-user-role" disabled />
+                        </div>
+                        <div class="input-block">
+                            <label>Дата и время события:</label>
+                            <input type="text" id="log-time" disabled />
+                        </div>
+                    </div>
 
-              <section class="flex-column input-block" style="padding: 0;">
-                <h3>Событие:</h3>
-                <input type="text" class="text-number-input" id="log-action" disabled style="width: 100%;" />
-              </section>
+                    <div class="input-block full-width">
+                        <label>Событие:</label>
+                        <input type="text" id="log-action" disabled />
+                    </div>
 
-              <section class="flex-column input-block" style="padding: 0;">
-                <h3>Подробности:</h3>
-                <textarea id="log-details-text" style="height: 250px; font-family: monospace; font-size: 13px; width: 100%;" disabled></textarea>
-              </section>
+                    <div class="input-block full-width">
+                        <label>Подробности:</label>
+                        <textarea id="log-details-text" disabled></textarea>
+                    </div>
 
-              <section class="form-control-buttons" style="padding: 0; margin-top: 10px;">
-                <button type="button" id="close-log-btn" style="width: 100%; background-color: #3e8de9; color: white;">Закрыть</button>
-              </section>
-              
-            </fieldset>
-          </form>
+                    <div class="modal-footer">
+                        <button type="button" id="close-log-btn">Закрыть</button>
+                    </div>
+                    
+                </fieldset>
+            </form>
         </div>
       </main>
     </div>
