@@ -7,9 +7,6 @@ function resizeDropdownElements() {
     document.getElementsByClassName("dropdown")[0].style.height =
       `${dropdownButton.scrollHeight}px`;
 
-    document.getElementsByClassName("dropdown-content")[0].style.top =
-      `${dropdownButton.scrollHeight / 2}px`;
-
     document.getElementsByClassName(
       "dropdown-content",
     )[0].children[0].style.height = `${dropdownButton.scrollHeight / 2}px`;

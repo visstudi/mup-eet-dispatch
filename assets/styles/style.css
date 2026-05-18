@@ -243,6 +243,8 @@ textarea {
 
 .overlay {
   position: fixed;
+  left: 0;
+  top: 0;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -297,6 +299,17 @@ textarea {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
     }
+  }
+}
+
+#overlay-request-details > form > fieldset > div:last-child {
+  .dropdown {
+    width: 100%;
+  }
+
+  button {
+    width: 100%;
+    font-size: min(1.4dvw, 2dvh);
   }
 }
 
@@ -858,30 +871,30 @@ main {
   }
 }
 
+.add-button {
+  padding: min(0.7dvw, 1dvh) min(1.4dvw, 2dvh);
+  align-items: center;
+  gap: min(0.7dvw, 1dvh);
+  background-color: #3e8de9;
+  color: #ffffff;
+  border-radius: min(1dvw, 1.5dvh);
+  font-size: min(1.4dvw, 2dvh);
+  font-weight: 600;
+
+  svg {
+    width: min(1.4dvw, 2dvh);
+    path {
+      fill: #ffffff;
+    }
+  }
+}
+
 #users {
   width: 100%;
   gap: min(1.7dvw, 2.5dvh);
 
   #users-add-search {
     justify-content: space-between;
-
-    #users-add {
-      padding: min(0.7dvw, 1dvh) min(1.4dvw, 2dvh);
-      align-items: center;
-      gap: min(0.7dvw, 1dvh);
-      background-color: #3e8de9;
-      color: #ffffff;
-      border-radius: min(1dvw, 1.5dvh);
-      font-size: min(1.4dvw, 2dvh);
-      font-weight: 600;
-
-      svg {
-        width: min(1.4dvw, 2dvh);
-        path {
-          fill: #ffffff;
-        }
-      }
-    }
   }
 
   #users-table {
@@ -1047,7 +1060,6 @@ main {
 #journal-table thead th {
   position: sticky;
   top: 0;
-  z-index: 10;
 }
 
 #job-salary {
@@ -1099,7 +1111,6 @@ body #requests-table thead th {
   font-size: min(1.4dvw, 2dvh);
   position: sticky;
   top: 0;
-  z-index: 10;
 }
 
 body #requests-table thead th:first-child {

@@ -134,7 +134,16 @@
             </section>
             <span></span>
           </section>
-          <div id="user-error-message" style="color: #e93e3e; font-size: min(1.1dvw, 1.6dvh); font-weight: 600; text-align: center; display: none;">
+          <div
+            id="user-error-message"
+            style="
+              color: #e93e3e;
+              font-size: min(1.1dvw, 1.6dvh);
+              font-weight: 600;
+              text-align: center;
+              display: none;
+            "
+          >
             Не удалось сохранить изменения
           </div>
           <section class="form-control-buttons">
@@ -251,7 +260,7 @@
       <main>
         <section class="flex-column" id="users">
           <section class="flex-row" id="users-add-search">
-            <button class="flex-row" id="users-add">
+            <button class="flex-row add-button" id="users-add">
               <svg
                 viewBox="0 0 16 16"
                 fill="none"
@@ -287,25 +296,25 @@
           </section>
           <div class="table-container">
             <table id="users-table">
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>ФИО</th>
-                <th>Должность</th>
-                <th>Вкл.</th>
-                <th>Редактировать</th>
-              </tr>
-            </thead>
-            <tbody>
-              <!-- <tr>
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>ФИО</th>
+                  <th>Должность</th>
+                  <th>Вкл.</th>
+                  <th>Редактировать</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- <tr>
                 <td>141</td>
                 <td>Иванов И. А.</td>
                 <td>Администратор</td>
                 <td><input type="checkbox" /></td>
                 <td><a>Открыть</a></td>
               </tr> -->
-            </tbody>
-          </table>
+              </tbody>
+            </table>
           </div>
         </section>
       </main>
