@@ -366,7 +366,7 @@ nav {
 main {
   padding: min(0.7dvw, 1dvh);
   display: flex;
-  justify-content: space-between;
+  justify-content: space-evenly; 
   width: 100%;
 }
 
