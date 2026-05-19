@@ -36,14 +36,8 @@ async function apiCall(endpoint, method = "GET", body = null) {
     }
     const text = await response.text();
     if (!response.ok) throw new Error(text || response.status);
-    try {
-      return JSON.parse(text);
-    } catch (e) {
-      return text;
-    }
-  } catch (e) {
-    throw e;
-  }
+    try { return JSON.parse(text); } catch (e) { return text; }
+  } catch (e) { throw e; }
 }
 
 async function fetchRoutes() {
@@ -53,9 +47,7 @@ async function fetchRoutes() {
     renderRouteList();
     if (allRoutes.length > 0 && !currentRouteData)
       selectRoute(allRoutes[0].name);
-  } catch (e) {
-    console.error("Ошибка загрузки");
-  }
+  } catch (e) { console.error("Ошибка загрузки"); }
 }
 
 function renderRouteList() {
@@ -78,24 +70,21 @@ function selectRoute(name) {
 
   const panel = document.querySelector(".modify-route-info");
   panel.querySelector("#color-preview div").textContent = currentRouteData.name;
-  const hex = currentRouteData.color.startsWith("#")
-    ? currentRouteData.color
-    : `#${currentRouteData.color}`;
+  
+  const hex = currentRouteData.color.startsWith("#") ? currentRouteData.color : `#${currentRouteData.color}`;
   panel.querySelector("#color-input-text").value = hex;
   updateColorPreview(hex, panel);
 
-  panel.querySelector("#stop-first input").value =
-    currentRouteData.fromStation || "";
-  panel.querySelector("#stop-last input").value =
-    currentRouteData.toStation || "";
+  panel.querySelector("#stop-first input").value = currentRouteData.fromStation || "";
+  panel.querySelector("#stop-last input").value = currentRouteData.toStation || "";
 
   applyPriceLabels(currentRouteData.routeType, panel);
-  panel.querySelector("#price-first input").value =
-    currentRouteData.priceLow || 0;
-  panel.querySelector("#price-second input").value =
-    currentRouteData.priceHigh || 0;
-  panel.querySelector("#map-link input").value =
-    currentRouteData.yandexMapLink || "";
+  panel.querySelector("#price-first input").value = currentRouteData.priceLow || 0;
+  panel.querySelector("#price-second input").value = currentRouteData.priceHigh || 0;
+  
+  panel.querySelector("#map-link input").value = currentRouteData.yandexMapLink || "";
+  const mapChoice = panel.querySelector("#map-variation .dropdown-choice");
+  if(mapChoice) mapChoice.textContent = currentRouteData.yandexMapLink ? "Я.Карты" : "Скрыть";
 
   renderScheduleTable();
 }
@@ -113,24 +102,11 @@ function initCreateOverlay() {
   createBtn.onclick = () => {
     form.reset();
     overlay.querySelector(".dropdown-choice").textContent = "По способу оплаты";
-    overlay
-      .querySelector("#price-variation")
-      .setAttribute("data-current-type", "0");
+    overlay.querySelector("#price-variation").setAttribute("data-current-type", "0");
     applyPriceLabels(0, overlay);
     updateColorPreview("#3E8DE9", overlay);
     overlay.classList.remove("hidden");
   };
-
-  overlay.querySelector("#color-input-text").oninput = (e) =>
-    updateColorPreview(e.target.value, overlay);
-
-  overlay.querySelectorAll(".dropdown-content div").forEach((div) => {
-    div.onclick = () => {
-      const type = div.textContent.trim() === "По способу оплаты" ? 0 : 1;
-      applyPriceLabels(type, overlay);
-      div.parentElement.style.maxHeight = null;
-    };
-  });
 
   form.onsubmit = async (e) => {
     e.preventDefault();
@@ -140,24 +116,16 @@ function initCreateOverlay() {
 
     try {
       const name = overlay.querySelector("#route-number-text").value.trim();
-      const mapUrl =
-        overlay.querySelector("#map-link input")?.value?.trim() || "";
+      const mapUrl = overlay.querySelector("#map-link input")?.value?.trim() || "";
 
       const payload = {
         name: name,
-        color:
-          overlay.querySelector("#color-input-text").value.trim() || "#3E8DE9",
+        color: overlay.querySelector("#color-input-text").value.trim() || "#3E8DE9",
         fromStation: overlay.querySelector("#stop-first input").value.trim(),
         toStation: overlay.querySelector("#stop-last input").value.trim(),
-        routeType: parseInt(
-          overlay
-            .querySelector("#price-variation")
-            .getAttribute("data-current-type"),
-        ),
-        priceLow:
-          parseInt(overlay.querySelector("#price-first input").value) || 0,
-        priceHigh:
-          parseInt(overlay.querySelector("#price-second input").value) || 0,
+        routeType: parseInt(overlay.querySelector("#price-variation").getAttribute("data-current-type")) || 0,
+        priceLow: parseInt(overlay.querySelector("#price-first input").value) || 0,
+        priceHigh: parseInt(overlay.querySelector("#price-second input").value) || 0,
         map: mapUrl ? 2 : 0,
         yandexMapLink: mapUrl || null,
       };
@@ -178,15 +146,10 @@ function initCreateOverlay() {
 
 function updateColorPreview(hex, container) {
   if (!/^#[0-9A-F]{6}$/i.test(hex)) return;
-  const r = parseInt(hex.slice(1, 3), 16),
-    g = parseInt(hex.slice(3, 5), 16),
-    b = parseInt(hex.slice(5, 7), 16);
+  const r = parseInt(hex.slice(1, 3), 16), g = parseInt(hex.slice(3, 5), 16), b = parseInt(hex.slice(5, 7), 16);
 
-  const colorSection =
-    container.querySelector("#route-color") ||
-    container.querySelector("#route-number-color");
-  if (colorSection)
-    colorSection.style.setProperty("--current-color", `${r} ${g} ${b}`);
+  const colorSection = container.querySelector("#route-color") || container.querySelector("#route-number-color");
+  if (colorSection) colorSection.style.setProperty("--current-color", `${r} ${g} ${b}`);
 
   const cp = container.querySelector("#color-input-preview");
   if (cp) cp.style.backgroundColor = hex;
@@ -195,22 +158,87 @@ function updateColorPreview(hex, container) {
 function applyPriceLabels(type, container) {
   const dropdown = container.querySelector("#price-variation");
   dropdown.setAttribute("data-current-type", type);
-  dropdown.querySelector(".dropdown-choice").textContent =
-    type == 0 ? "По способу оплаты" : "По месту назначения";
+  dropdown.querySelector(".dropdown-choice").textContent = type == 0 ? "По способу оплаты" : "По городам";
 
-  container.querySelector("#price-first h3").textContent =
-    type == 0 ? "Наличный способ" : "По городу";
-  container.querySelector("#price-second h3").textContent =
-    type == 0 ? "Безналичный способ" : "Межгород";
+  container.querySelector("#price-first h3").textContent = type == 0 ? "Наличный способ" : "По городу";
+  container.querySelector("#price-second h3").textContent = type == 0 ? "Безналичный способ" : "Межгород";
+}
+
+function initUI() {
+  document.querySelectorAll(".dropdown-button").forEach((btn) => {
+    btn.onclick = () => {
+      const menu = btn.nextElementSibling;
+      document.querySelectorAll(".dropdown-content").forEach((c) => {
+        if (c !== menu) c.style.maxHeight = null;
+      });
+      menu.style.maxHeight = menu.style.maxHeight ? null : `${menu.scrollHeight}px`;
+    };
+  });
+
+  document.querySelectorAll(".dropdown-content div").forEach((div) => {
+    div.onclick = function () {
+      const txt = this.textContent.trim();
+      if (!txt) return;
+
+      const drop = this.closest(".dropdown");
+      drop.querySelector(".dropdown-choice").textContent = txt;
+
+      if (drop.closest("#price-variation")) {
+        const panel = this.closest(".modify-route-info") || this.closest(".overlay");
+        const typeVal = txt === "По способу оплаты" ? 0 : 1;
+        applyPriceLabels(typeVal, panel);
+        drop.setAttribute("data-current-type", typeVal);
+      }
+
+      if (drop.closest("#time-value-type")) {
+        const tRange = document.getElementById("time-interval");
+        const tPrecise = document.getElementById("precise-time");
+        tRange.style.display = txt === "Диапазон времени" ? "flex" : "none";
+        tPrecise.style.display = txt === "Точное время" ? "flex" : "none";
+        tPrecise.style.visibility = "visible";
+      }
+
+      if (drop.closest("#period-value-type")) {
+        const pRange = document.getElementById("period-interval");
+        const pPrecise = document.getElementById("precise-period");
+        if (txt === "Диапазон времени") {
+          pRange.style.display = "flex";
+          pPrecise.style.display = "none";
+        } else if (txt === "Точный интервал") {
+          pRange.style.display = "none";
+          pPrecise.style.display = "flex";
+          pPrecise.style.visibility = "visible";
+        } else {
+          pRange.style.display = "none";
+          pPrecise.style.display = "none";
+        }
+      }
+
+      this.parentElement.style.maxHeight = null;
+    };
+  });
+
+  document.querySelectorAll('.form-control-buttons button[type="button"]').forEach((btn) => {
+    btn.onclick = () => btn.closest(".overlay").classList.add("hidden");
+  });
+
+  document.querySelector("#route-control-buttons button:last-child").onclick = saveAllData;
+  document.querySelector("#route-control-buttons button:first-child").onclick = async () => {
+    if (confirm("Удалить маршрут?")) {
+      await apiCall(`/NetworkStates/remove?routeName=${currentRouteData.name}`, "DELETE");
+      currentRouteData = null;
+      await fetchRoutes();
+    }
+  };
+
+  document.getElementById("color-input-text").oninput = (e) =>
+    updateColorPreview(e.target.value, document.querySelector(".modify-route-info"));
 }
 
 async function saveAllData() {
   if (!currentRouteData) return;
-  const btn = document.querySelector(
-    "#route-control-buttons button:last-child",
-  );
-  btn.disabled = true;
-  btn.textContent = "Сохранение...";
+  const btn = document.querySelector("#route-control-buttons button:last-child");
+  btn.disabled = true; btn.textContent = "Сохранение...";
   const panel = document.querySelector(".modify-route-info");
 
   try {
@@ -225,14 +253,9 @@ async function saveAllData() {
       color: panel.querySelector("#color-input-text").value.trim(),
       fromStation: panel.querySelector("#stop-first input").value.trim(),
       toStation: panel.querySelector("#stop-last input").value.trim(),
-      routeType: parseInt(
-        panel
-          .querySelector("#price-variation")
-          .getAttribute("data-current-type"),
-      ),
+      routeType: parseInt(panel.querySelector("#price-variation").getAttribute("data-current-type")) || 0,
       priceLow: parseInt(panel.querySelector("#price-first input").value) || 0,
-      priceHigh:
-        parseInt(panel.querySelector("#price-second input").value) || 0,
+      priceHigh: parseInt(panel.querySelector("#price-second input").value) || 0,
       map: mapUrl ? 2 : 0,
       yandexMapLink: mapUrl || null,
     };
@@ -240,21 +263,15 @@ async function saveAllData() {
     await apiCall("/NetworkStates/edit", "PATCH", payload);
     alert("Сохранено!");
     await fetchRoutes();
-  } catch (e) {
-    alert("Ошибка: " + e.message);
-  } finally {
-    btn.disabled = false;
-    btn.textContent = "Сохранить";
-  }
+  } catch (e) { alert("Ошибка: " + e.message); } 
+  finally { btn.disabled = false; btn.textContent = "Сохранить"; }
 }
 
 function renderScheduleTable() {
   const tbody = document.querySelector("#route-schedule tbody");
   tbody.innerHTML = "";
   const table = currentRouteData.scheduleTable || [];
-  const sorted = [...table].sort((a, b) =>
-    (a.startRange || "").localeCompare(b.startRange || ""),
-  );
+  const sorted = [...table].sort((a, b) => (a.startRange || "").localeCompare(b.startRange || ""));
 
   sorted.forEach((item, index) => {
     const isDuty = item.interval === -1;
@@ -286,56 +303,6 @@ function renderScheduleTable() {
   });
 }
 
-function initUI() {
-  document.querySelectorAll(".dropdown-button").forEach((btn) => {
-    btn.onclick = () => {
-      const menu = btn.nextElementSibling;
-      document.querySelectorAll(".dropdown-content").forEach((c) => {
-        if (c !== menu) c.style.maxHeight = null;
-      });
-      menu.style.maxHeight = menu.style.maxHeight
-        ? null
-        : `${menu.scrollHeight}px`;
-    };
-  });
-  document
-    .querySelectorAll("#price-variation .dropdown-content div")
-    .forEach((div) => {
-      div.onclick = () => {
-        const panel =
-          div.closest(".modify-route-info") || div.closest(".overlay");
-        applyPriceLabels(
-          div.textContent.trim() === "По способу оплаты" ? 0 : 1,
-          panel,
-        );
-        div.parentElement.style.maxHeight = null;
-      };
-    });
-  document
-    .querySelectorAll('.form-control-buttons button[type="button"]')
-    .forEach((btn) => {
-      btn.onclick = () => btn.closest(".overlay").classList.add("hidden");
-    });
-  document.querySelector("#route-control-buttons button:last-child").onclick =
-    saveAllData;
-  document.querySelector("#route-control-buttons button:first-child").onclick =
-    async () => {
-      if (confirm("Удалить маршрут?")) {
-        await apiCall(
-          `/NetworkStates/remove?routeName=${currentRouteData.name}`,
-          "DELETE",
-        );
-        currentRouteData = null;
-        await fetchRoutes();
-      }
-    };
-  document.getElementById("color-input-text").oninput = (e) =>
-    updateColorPreview(
-      e.target.value,
-      document.querySelector(".modify-route-info"),
-    );
-}
-
 function formatTime(t) {
   if (!t) return null;
   let p = t.split(":");
@@ -350,6 +317,15 @@ function initOverlayWizard() {
   document.querySelector("#route-schedule tfoot button").onclick = () => {
     tempScheduleItem = {};
     [oTime, oNote, oPeriod].forEach((o) => o.querySelector("form").reset());
+    
+    oTime.querySelector('.dropdown-choice').textContent = "Диапазон времени";
+    document.getElementById('time-interval').style.display = 'flex';
+    document.getElementById('precise-time').style.display = 'none';
+    
+    oPeriod.querySelector('.dropdown-choice').textContent = "Диапазон времени";
+    document.getElementById('period-interval').style.display = 'flex';
+    document.getElementById('precise-period').style.display = 'none';
+
     oTime.classList.remove("hidden");
   };
 
@@ -357,17 +333,11 @@ function initOverlayWizard() {
     e.preventDefault();
     const choice = oTime.querySelector(".dropdown-choice").textContent.trim();
     if (choice === "Точное время") {
-      tempScheduleItem.startRange = formatTime(
-        document.getElementById("precise-time-text").value,
-      );
+      tempScheduleItem.startRange = formatTime(document.getElementById("precise-time-text").value);
       tempScheduleItem.endRange = null;
     } else {
-      tempScheduleItem.startRange = formatTime(
-        document.getElementById("from-time-text").value,
-      );
-      tempScheduleItem.endRange = formatTime(
-        document.getElementById("to-time-text").value,
-      );
+      tempScheduleItem.startRange = formatTime(document.getElementById("from-time-text").value);
+      tempScheduleItem.endRange = formatTime(document.getElementById("to-time-text").value);
     }
     oTime.classList.add("hidden");
     oNote.classList.remove("hidden");
@@ -375,8 +345,7 @@ function initOverlayWizard() {
 
   oNote.querySelector("form").onsubmit = (e) => {
     e.preventDefault();
-    tempScheduleItem.annotation =
-      document.getElementById("note-text").value || null;
+    tempScheduleItem.annotation = document.getElementById("note-text").value || null;
     oNote.classList.add("hidden");
     oPeriod.classList.remove("hidden");
   };
@@ -384,16 +353,13 @@ function initOverlayWizard() {
   oPeriod.querySelector("form").onsubmit = (e) => {
     e.preventDefault();
     const type = oPeriod.querySelector(".dropdown-choice").textContent.trim();
-    if (type === "Дежурный") tempScheduleItem.interval = -1;
-    else if (type === "Точный интервал")
-      tempScheduleItem.interval =
-        parseInt(document.getElementById("precise-period-text").value) || 0;
-    else
-      tempScheduleItem.interval =
-        parseInt(
-          document.getElementById("period-interval").querySelector("input")
-            .value,
-        ) || 0;
+    if (type === "Дежурный") {
+        tempScheduleItem.interval = -1;
+    } else if (type === "Точный интервал") {
+        tempScheduleItem.interval = parseInt(document.getElementById("precise-period-text").value) || 0;
+    } else {
+        tempScheduleItem.interval = parseInt(document.getElementById("period-interval").querySelector("input").value) || 0;
+    }
 
     currentRouteData.scheduleTable.push(tempScheduleItem);
     renderScheduleTable();
