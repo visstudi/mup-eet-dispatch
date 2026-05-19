@@ -157,9 +157,16 @@ async function saveAllData() {
     const panel = document.querySelector('.modify-route-info');
 
     try {
+        const safeSchedule = currentRouteData.scheduleTable.map(item => ({
+            startRange: item.startRange || "00:00:00",
+            endRange: item.endRange || null,
+            annotation: item.annotation || null,
+            interval: item.interval || 0
+        }));
+
         await apiCall('/Schedule/update', 'POST', {
             route: currentRouteData.name,
-            scheduleTable: currentRouteData.scheduleTable
+            scheduleTable: safeSchedule 
         });
 
         let mapUrl = panel.querySelector('#map-link input').value.trim();
@@ -187,36 +194,85 @@ async function saveAllData() {
 }
 
 function initUI() {
-    document.querySelectorAll('.dropdown-button').forEach(btn => {
+    document.querySelectorAll(".dropdown-button").forEach((btn) => {
         btn.onclick = () => {
             const menu = btn.nextElementSibling;
-            document.querySelectorAll('.dropdown-content').forEach(c => { if(c!==menu) c.style.maxHeight = null; });
-            menu.style.maxHeight = menu.style.maxHeight ? null : "150px";
+            document.querySelectorAll(".dropdown-content").forEach((c) => {
+                if (c !== menu) c.style.maxHeight = null;
+            });
+            menu.style.maxHeight = menu.style.maxHeight ? null : `${menu.scrollHeight}px`;
         };
     });
-    document.querySelectorAll('.dropdown-content div').forEach(div => {
-        div.onclick = function() {
+
+    document.querySelectorAll(".dropdown-content div").forEach((div) => {
+        div.onclick = function () {
             const txt = this.textContent.trim();
-            if(!txt) return;
-            const drop = this.closest('.dropdown');
-            drop.querySelector('.dropdown-choice').textContent = txt;
-            if (drop.closest('#price-variation')) {
-                const p = this.closest('.modify-route-info') || this.closest('.overlay');
-                applyPriceLabels(txt === "По способу оплаты" ? 0 : 1, p);
+            if (!txt) return;
+
+            const drop = this.closest(".dropdown");
+            drop.querySelector(".dropdown-choice").textContent = txt;
+
+            if (drop.closest("#price-variation")) {
+                const panel = this.closest(".modify-route-info") || this.closest(".overlay");
+                const typeVal = txt === "По способу оплаты" ? 0 : 1;
+                applyPriceLabels(typeVal, panel);
+                drop.setAttribute("data-current-type", typeVal);
             }
-            this.parentElement.style.maxHeight = null;
+
+            if (drop.closest("#time-value-type")) {
+                const tRange = document.getElementById("time-interval");
+                const tPrecise = document.getElementById("precise-time");
+                if (txt === "Точное время") {
+                    tRange.style.display = "none";
+                    tPrecise.style.display = "flex";
+                } else {
+                    tRange.style.display = "flex";
+                    tPrecise.style.display = "none";
+                }
+            }
+
+            if (drop.closest("#period-value-type")) {
+                const pRange = document.getElementById("period-interval");
+                const pPrecise = document.getElementById("precise-period");
+                if (txt === "Точный интервал") {
+                    pRange.style.display = "none";
+                    pPrecise.style.display = "flex";
+                } else if (txt === "Дежурный") {
+                    pRange.style.display = "none";
+                    pPrecise.style.display = "none";
+                } else { 
+                    pRange.style.display = "flex";
+                    pPrecise.style.display = "none";
+                }
+            }
+
+            this.parentElement.style.maxHeight = null; 
+        };
+    });
+
+    document.querySelectorAll('.form-control-buttons button[type="button"]').forEach((btn) => {
+        btn.onclick = () => btn.closest(".overlay").classList.add("hidden");
+    });
+
+    document.querySelector("#route-control-buttons button:last-child").onclick = saveAllData;
+    document.querySelector("#route-control-buttons button:first-child").onclick = async () => {
+        if (confirm("Удалить маршрут?")) {
+            await apiCall(`/NetworkStates/remove?routeName=${currentRouteData.name}`, "DELETE");
+            currentRouteData = null;
+            await fetchRoutes();
         }
-    });
-    document.querySelectorAll('.form-control-buttons button[type="button"]').forEach(btn => {
-        btn.onclick = () => btn.closest('.overlay').classList.add('hidden');
-    });
-    document.querySelector('#route-control-buttons button:last-child').onclick = saveAllData;
+    };
+
+    document.getElementById("color-input-text").oninput = (e) =>
+        updateColorPreview(e.target.value, document.querySelector(".modify-route-info"));
 }
 
 function formatTime(t) {
-    if (!t) return null;
-    let p = t.split(':');
-    return `${(p[0] || '00').padStart(2, '0')}:${(p[1] || '00').padStart(2, '0')}:00`; 
+    if (!t || t.trim() === "") return null; 
+    let p = t.split(":");
+    let h = parseInt(p[0]) || 0;
+    let m = parseInt(p[1]) || 0;
+    return `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}:00`;
 }
 
 function initOverlayWizard() {
@@ -227,13 +283,28 @@ function initOverlayWizard() {
     document.querySelector('#route-schedule tfoot button').onclick = () => {
         tempScheduleItem = {};
         [oTime, oNote, oPeriod].forEach(o => o.querySelector('form').reset());
+        
+        oTime.querySelector('.dropdown-choice').textContent = "Диапазон времени";
+        document.getElementById('time-interval').style.display = 'flex';
+        document.getElementById('precise-time').style.display = 'none';
+        
+        oPeriod.querySelector('.dropdown-choice').textContent = "Диапазон времени";
+        document.getElementById('period-interval').style.display = 'flex';
+        document.getElementById('precise-period').style.display = 'none';
+
         oTime.classList.remove('hidden');
     };
 
     oTime.querySelector('form').onsubmit = (e) => {
         e.preventDefault();
-        tempScheduleItem.startRange = formatTime(document.getElementById('from-time-text').value);
-        tempScheduleItem.endRange = formatTime(document.getElementById('to-time-text').value);
+        const choice = oTime.querySelector('.dropdown-choice').textContent.trim();
+        if (choice === "Точное время") {
+            tempScheduleItem.startRange = formatTime(document.getElementById('precise-time-text').value) || "00:00:00";
+            tempScheduleItem.endRange = null;
+        } else {
+            tempScheduleItem.startRange = formatTime(document.getElementById('from-time-text').value) || "00:00:00";
+            tempScheduleItem.endRange = formatTime(document.getElementById('to-time-text').value);
+        }
         oTime.classList.add('hidden'); oNote.classList.remove('hidden');
     };
 
@@ -247,7 +318,9 @@ function initOverlayWizard() {
         e.preventDefault();
         const type = oPeriod.querySelector('.dropdown-choice').textContent.trim();
         if (type === "Дежурный") tempScheduleItem.interval = -1;
-        else tempScheduleItem.interval = parseInt(document.getElementById('precise-period-text').value) || 0;
+        else if (type === "Точный интервал") tempScheduleItem.interval = parseInt(document.getElementById('precise-period-text').value) || 0;
+        else tempScheduleItem.interval = parseInt(document.getElementById('period-interval').querySelector('input').value) || 0;
+
         currentRouteData.scheduleTable.push(tempScheduleItem);
         renderScheduleTable();
         oPeriod.classList.add('hidden');
@@ -256,10 +329,21 @@ function initOverlayWizard() {
 
 function initCreateOverlay() {
     const overlay = document.getElementById('overlay-route-create');
+    
+    const picker = overlay.querySelector('#color-picker-hidden');
+    const textInput = overlay.querySelector('#color-input-text');
+    if (picker && textInput) {
+        picker.addEventListener('input', (e) => {
+            textInput.value = e.target.value.toUpperCase();
+            updateColorPreview(e.target.value, overlay);
+        });
+    }
+
     document.getElementById('create-route-button').onclick = () => {
         overlay.querySelector('form').reset();
         overlay.classList.remove('hidden');
     };
+    
     overlay.querySelector('form').onsubmit = async (e) => {
         e.preventDefault();
         const name = overlay.querySelector('#route-number-text').value.trim();
