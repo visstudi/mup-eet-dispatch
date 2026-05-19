@@ -23,23 +23,29 @@ async function apiCall(endpoint, method = 'GET', body = null) {
 
     const headers = {
         'Accept': '*/*',
-        'Authorization': token,
+        'Authorization': token, 
         'Content-Type': 'application/json'
     };
 
-    const response = await fetch(`${API_URL}${endpoint}`, {
-        method,
-        headers,
-        body: body ? JSON.stringify(body) : null
-    });
+    try {
+        const response = await fetch(`${API_URL}${endpoint}`, {
+            method,
+            headers,
+            body: body ? JSON.stringify(body) : null
+        });
 
-    if (response.status === 401) {
-        window.location.href = 'login.html';
-        return null;
+        if (response.status === 401) {
+            localStorage.removeItem('auth_token');
+            window.location.href = 'login.html';
+            return null;
+        }
+
+        const text = await response.text();
+        return text ? JSON.parse(text) : null;
+    } catch (e) {
+        console.error("Ошибка сети:", e);
+        throw e;
     }
-
-    const text = await response.text();
-    return text ? JSON.parse(text) : null;
 }
 
 async function loadRoutes() {
@@ -47,7 +53,9 @@ async function loadRoutes() {
         const data = await apiCall('/NetworkStates/get');
         allRoutes = data.routes || [];
         renderSidebarList();
-    } catch (e) { console.error("Ошибка загрузки:", e); }
+    } catch (e) { 
+        console.error("Ошибка загрузки маршрутов:", e); 
+    }
 }
 
 function renderSidebarList() {
@@ -59,13 +67,16 @@ function renderSidebarList() {
         const art = document.createElement('article');
         art.className = `list-entry flex-column ${isSelected ? 'active' : ''}`;
         
+        const statusClass = route.state ? 'status-working' : 'status-stopped';
+        const statusText = route.state ? '● Работает' : '● Остановлен';
+
         art.innerHTML = `
             <div class="route-info">
                 <h4>Маршрут ${route.name}</h4>
                 <p>[${route.fromStation || ''} - ${route.toStation || ''}]</p>
             </div>
-            <div class="route-status ${route.state ? 'status-working' : 'status-stopped'}">
-                ${route.state ? '● Работает' : '● Остановлен'}
+            <div class="route-status ${statusClass}">
+                ${statusText}
             </div>
         `;
 
@@ -86,6 +97,7 @@ function toggleSelection(name) {
 
 function renderChips() {
     const container = document.getElementById('selected-routes-container');
+    if (!container) return;
     container.innerHTML = '';
 
     selectedRoutes.forEach(name => {
@@ -93,12 +105,12 @@ function renderChips() {
         chip.className = 'route-chip';
         chip.innerHTML = `
             <p class="route-chip-number">${name}</p>
-            <svg class="close-chip" data-name="${name}" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <svg class="close-chip" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="cursor:pointer; width:16px;">
                 <path d="M18 6L6 18M6 6L18 18" stroke-width="3" stroke-linecap="round"/>
             </svg>
         `;
         
-        chip.querySelector('.close-chip').onclick = (e) => {
+        chip.querySelector('svg').onclick = (e) => {
             e.stopPropagation();
             toggleSelection(name);
         };
@@ -127,49 +139,48 @@ function initUIListeners() {
 
     btnClear.onclick = () => {
         selectedRoutes.clear();
-        reasonArea.value = '';
+        if(reasonArea) reasonArea.value = '';
         renderSidebarList();
         renderChips();
     };
 
     btnSave.onclick = async () => {
         if (selectedRoutes.size === 0) {
-            alert("Выберите хотя бы один маршрут из списка слева");
+            alert("Выберите хотя бы один маршрут");
             return;
         }
 
         btnSave.disabled = true;
-        btnSave.textContent = "Синхронизация...";
+        const oldText = btnSave.textContent;
+        btnSave.textContent = "Сохранение...";
 
-        const reasonValue = reasonArea.value.trim() || null;
+        const reasonValue = reasonArea ? reasonArea.value.trim() : null;
 
         const routesPayload = Array.from(selectedRoutes).map(name => ({
             name: name,
             state: newState,
-            reason: reasonValue
+            reason: reasonValue || null
         }));
 
         const finalPayload = {
             routes: routesPayload,
             batchState: newState,
-            batchReason: reasonValue
+            batchReason: reasonValue || null
         };
 
         try {
             await apiCall('/NetworkStates/batch', 'PATCH', finalPayload);
-            alert(`Успешно обновлено маршрутов: ${selectedRoutes.size}`);
+            alert("Статус обновлен");
             
             selectedRoutes.clear();
-            reasonArea.value = '';
-            await loadRoutes(); 
+            if(reasonArea) reasonArea.value = '';
+            await loadRoutes();
             renderChips();
         } catch (e) {
-            alert("Ошибка при массовом обновлении");
+            alert("Ошибка при сохранении");
         } finally {
             btnSave.disabled = false;
-            btnSave.textContent = "Сохранить";
+            btnSave.textContent = oldText;
         }
     };
 }
-
-initTrafficPage();

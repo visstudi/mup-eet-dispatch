@@ -33,8 +33,10 @@
             </section>
             <section class="flex-column input-block" id="color-pick">
               <h3>Цвет маршрута</h3>
-              <div id="color-input">
+              <div id="color-input" style="position: relative;">
                 <div id="color-input-preview"></div>
+                <input type="color" id="color-picker-hidden" style="opacity: 0; position: absolute; left: 10px; width: 34px; height: 34px; cursor: pointer;" />
+                
                 <input
                   type="text"
                   id="color-input-text"
@@ -59,7 +61,7 @@
               <input
                 type="text"
                 class="text-number-input"
-                id="stop-first-text"
+                id="stop-last-text"
                 placeholder="Введите текст..."
               />
             </section>
@@ -400,8 +402,10 @@
           <section class="flex-row" id="route-color">
             <section class="flex-column input-block" id="color-pick">
               <h3>Цвет маршрута</h3>
-              <div id="color-input">
+              <div id="color-input" style="position: relative;">
                 <div id="color-input-preview"></div>
+                <input type="color" id="color-picker-hidden" style="opacity: 0; position: absolute; left: 10px; width: 34px; height: 34px; cursor: pointer;" />
+                
                 <input
                   type="text"
                   id="color-input-text"
@@ -429,7 +433,7 @@
               <input
                 type="text"
                 class="text-number-input"
-                id="stop-first-text"
+                id="stop-last-text"
                 placeholder="Введите текст..."
               />
             </section>
