@@ -1,6 +1,7 @@
 let allRoutes = [];
 let selectedRoutes = new Set(); 
 let newState = true; 
+let autoRefreshInterval = null;
 
 document.addEventListener('DOMContentLoaded', initTrafficPage);
 
@@ -15,7 +16,15 @@ async function initTrafficPage() {
 
     initUIListeners();
     await loadRoutes();
+    
+    autoRefreshInterval = setInterval(() => {
+        loadRoutes(true); 
+    }, 30000);
 }
+
+window.addEventListener('beforeunload', () => {
+    if (autoRefreshInterval) clearInterval(autoRefreshInterval);
+});
 
 async function apiCall(endpoint, method = 'GET', body = null) {
     let token = localStorage.getItem('auth_token') || "";
@@ -48,13 +57,13 @@ async function apiCall(endpoint, method = 'GET', body = null) {
     }
 }
 
-async function loadRoutes() {
+async function loadRoutes(isSilent = false) {
     try {
         const data = await apiCall('/NetworkStates/get');
         allRoutes = data.routes || [];
         renderSidebarList();
     } catch (e) { 
-        console.error("Ошибка загрузки маршрутов:", e); 
+        if (!isSilent) console.error("Ошибка загрузки маршрутов:", e); 
     }
 }
 
@@ -91,8 +100,8 @@ function toggleSelection(name) {
     } else {
         selectedRoutes.add(name);
     }
-    renderSidebarList();
-    renderChips();
+    renderSidebarList(); 
+    renderChips();   
 }
 
 function renderChips() {
@@ -105,12 +114,12 @@ function renderChips() {
         chip.className = 'route-chip';
         chip.innerHTML = `
             <p class="route-chip-number">${name}</p>
-            <svg class="close-chip" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="cursor:pointer; width:16px;">
+            <svg class="close-chip" data-name="${name}" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="cursor:pointer; width:16px;">
                 <path d="M18 6L6 18M6 6L18 18" stroke-width="3" stroke-linecap="round"/>
             </svg>
         `;
         
-        chip.querySelector('svg').onclick = (e) => {
+        chip.querySelector('.close-chip').onclick = (e) => {
             e.stopPropagation();
             toggleSelection(name);
         };
@@ -152,7 +161,7 @@ function initUIListeners() {
 
         btnSave.disabled = true;
         const oldText = btnSave.textContent;
-        btnSave.textContent = "Сохранение...";
+        btnSave.textContent = "Синхронизация...";
 
         const reasonValue = reasonArea ? reasonArea.value.trim() : null;
 
@@ -170,11 +179,11 @@ function initUIListeners() {
 
         try {
             await apiCall('/NetworkStates/batch', 'PATCH', finalPayload);
-            alert("Статус обновлен");
+            alert(`Успешно обновлено маршрутов: ${selectedRoutes.size}`);
             
             selectedRoutes.clear();
             if(reasonArea) reasonArea.value = '';
-            await loadRoutes();
+            await loadRoutes(); 
             renderChips();
         } catch (e) {
             alert("Ошибка при сохранении");
