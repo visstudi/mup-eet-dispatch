@@ -187,52 +187,21 @@
               <h3>Тип интервала:</h3>
               <div class="dropdown">
                 <button class="dropdown-button" type="button">
-                  <p class="dropdown-choice">Диапазон времени</p>
-                  <svg
-                    viewBox="0 0 14 7"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      fill-rule="evenodd"
-                      clip-rule="evenodd"
-                      d="M0.157097 0.22787C0.39162 -0.0457397 0.803543 -0.0774261 1.07715 0.157097L6.74251 5.01312L12.4079 0.157097C12.6815 -0.0774255 13.0934 -0.0457391 13.3279 0.227871C13.5624 0.501481 13.5308 0.913404 13.2572 1.14793L7.16715 6.36793C6.9228 6.57737 6.56222 6.57737 6.31787 6.36793L0.22787 1.14793C-0.0457397 0.913404 -0.0774261 0.501481 0.157097 0.22787Z"
-                    />
-                  </svg>
+                  <p class="dropdown-choice">Точный интервал</p> 
+                  <svg viewBox="0 0 14 7" fill="none"><path d="M0 0L7 7L14 0" stroke="black" /></svg>
                 </button>
                 <div class="dropdown-content">
                   <div></div>
-                  <div>Диапазон времени</div>
                   <div>Точный интервал</div>
                   <div>Дежурный</div>
                 </div>
               </div>
             </section>
-            <section class="flex-column input-block" id="precise-period" style="display: none;">
+            <section class="flex-column input-block" id="precise-period" style="display: flex;">
               <h3>Интервал:</h3>
-              <div>
-                <input
-                  type="text"
-                  class="text-number-input"
-                  id="precise-period-text"
-                />
-                мин.
-              </div>
-            </section>
-          </section>
-          <section class="flex-row" id="period-interval">
-            <section class="flex-column input-block" id="from-period">
-              <h3>От:</h3>
-              <div>
-                <input type="text" class="text-number-input" />
-                мин.
-              </div>
-            </section>
-            <section class="flex-column input-block" id="to-period">
-              <h3>До:</h3>
-              <div>
-                <input type="text" class="text-number-input" />
-                мин.
+              <div style="display: flex; align-items: center; gap: 10px;">
+                <input type="text" class="text-number-input" id="precise-period-text" style="width: 80px;" />
+                <span style="font-weight: 500; font-size: 16px;">мин.</span>
               </div>
             </section>
           </section>

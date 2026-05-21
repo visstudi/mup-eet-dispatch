@@ -56,6 +56,8 @@ async function fetchRoutes() {
 
 function renderRouteList() {
     const container = document.querySelector('.list.flex-column');
+    if (!container) return; 
+    
     container.innerHTML = '';
     allRoutes.forEach(route => {
         const art = document.createElement('article');
@@ -79,43 +81,65 @@ function selectRoute(name) {
     renderRouteList();
 
     const panel = document.querySelector('.modify-route-info');
-    panel.querySelector('#color-preview div').textContent = currentRouteData.name;
+    if (!panel) return;
+
+    const previewDiv = panel.querySelector('#color-preview div');
+    if (previewDiv) previewDiv.textContent = currentRouteData.name;
     
     const hex = currentRouteData.color.startsWith('#') ? currentRouteData.color : `#${currentRouteData.color}`;
-    panel.querySelector('#color-input-text').value = hex;
+    const colorInput = panel.querySelector('#color-input-text');
+    if (colorInput) colorInput.value = hex;
     updateColorPreview(hex, panel); 
 
-    panel.querySelector('#stop-first input').value = currentRouteData.fromStation || '';
-    panel.querySelector('#stop-last input').value = currentRouteData.toStation || '';
+    const stopFirst = panel.querySelector('#stop-first input');
+    const stopLast = panel.querySelector('#stop-last input');
+    if (stopFirst) stopFirst.value = currentRouteData.fromStation || '';
+    if (stopLast) stopLast.value = currentRouteData.toStation || '';
     
     applyPriceLabels(currentRouteData.routeType, panel);
-    panel.querySelector('#price-first input').value = currentRouteData.priceLow || 0;
-    panel.querySelector('#price-second input').value = currentRouteData.priceHigh || 0;
     
-    panel.querySelector('#map-link input').value = currentRouteData.yandexMapLink || '';
+    const priceFirst = panel.querySelector('#price-first input');
+    const priceSecond = panel.querySelector('#price-second input');
+    if (priceFirst) priceFirst.value = currentRouteData.priceLow || 0;
+    if (priceSecond) priceSecond.value = currentRouteData.priceHigh || 0;
+    
+    const mapInput = panel.querySelector('#map-link input');
+    if (mapInput) mapInput.value = currentRouteData.yandexMapLink || '';
+
+    const mapChoice = panel.querySelector('#map-variation .dropdown-choice');
+    if (mapChoice) mapChoice.textContent = currentRouteData.yandexMapLink ? "Я.Карты" : "Скрыть";
 
     renderScheduleTable();
 }
 
 function updateColorPreview(hex, container) {
-    if (!/^#[0-9A-F]{6}$/i.test(hex)) return;
+    if (!container || !/^#[0-9A-F]{6}$/i.test(hex)) return;
     const r = parseInt(hex.slice(1, 3), 16), g = parseInt(hex.slice(3, 5), 16), b = parseInt(hex.slice(5, 7), 16);
     const colorSection = container.querySelector('#route-color') || container.querySelector('#route-number-color');
     if (colorSection) colorSection.style.setProperty('--current-color', `${r} ${g} ${b}`);
     const cp = container.querySelector('#color-input-preview');
     if (cp) cp.style.backgroundColor = hex;
+
+    const picker = container.querySelector('#color-picker-hidden');
+    if (picker) picker.value = hex; 
 }
 
 function applyPriceLabels(type, container) {
     const dropdown = container.querySelector('#price-variation');
+    if (!dropdown) return;
     dropdown.setAttribute('data-current-type', type);
-    dropdown.querySelector('.dropdown-choice').textContent = type == 0 ? "По способу оплаты" : "По городам";
-    container.querySelector('#price-first h3').textContent = type == 0 ? "Наличный способ" : "По городу";
-    container.querySelector('#price-second h3').textContent = type == 0 ? "Безналичный способ" : "Межгород";
+    const choice = dropdown.querySelector('.dropdown-choice');
+    if (choice) choice.textContent = type == 0 ? "По способу оплаты" : "По городам";
+    
+    const hFirst = container.querySelector('#price-first h3');
+    const hSecond = container.querySelector('#price-second h3');
+    if (hFirst) hFirst.textContent = type == 0 ? "Наличный способ" : "По городу";
+    if (hSecond) hSecond.textContent = type == 0 ? "Безналичный способ" : "Межгород";
 }
 
 function renderScheduleTable() {
     const tbody = document.querySelector('#route-schedule tbody');
+    if (!tbody) return;
     tbody.innerHTML = '';
     const table = currentRouteData.scheduleTable || [];
     const sorted = [...table].sort((a, b) => (a.startRange || "").localeCompare(b.startRange || ""));
@@ -135,11 +159,23 @@ function renderScheduleTable() {
 
     tbody.querySelectorAll('.duty-check').forEach(chk => {
         chk.onchange = (e) => {
-            sorted[e.target.dataset.idx].interval = e.target.checked ? -1 : 10;
+            const idx = e.target.dataset.idx;
+            const item = sorted[idx];
+
+            if (e.target.checked) {
+                if (item.interval !== -1) {
+                    item._originalInterval = item.interval; 
+                }
+                item.interval = -1;
+            } else {
+                item.interval = item._originalInterval !== undefined ? item._originalInterval : 0;
+            }
+
             currentRouteData.scheduleTable = sorted;
             renderScheduleTable();
         };
     });
+
     tbody.querySelectorAll('.del-row').forEach(lnk => {
         lnk.onclick = (e) => {
             e.preventDefault();
@@ -153,12 +189,15 @@ function renderScheduleTable() {
 async function saveAllData() {
     if (!currentRouteData) return;
     const btn = document.querySelector('#route-control-buttons button:last-child');
-    btn.disabled = true; btn.textContent = "Сохранение...";
+    if (!btn) return;
+    
+    btn.disabled = true; 
+    btn.textContent = "Сохранение...";
     const panel = document.querySelector('.modify-route-info');
 
     try {
         const safeSchedule = currentRouteData.scheduleTable.map(item => ({
-            startRange: item.startRange || "00:00:00",
+            startRange: item.startRange || "00:00:00", 
             endRange: item.endRange || null,
             annotation: item.annotation || null,
             interval: item.interval || 0
@@ -169,19 +208,21 @@ async function saveAllData() {
             scheduleTable: safeSchedule 
         });
 
-        let mapUrl = panel.querySelector('#map-link input').value.trim();
+        const mapInput = panel.querySelector('#map-link input');
+        let mapUrl = mapInput ? mapInput.value.trim() : "";
+        
         if (mapUrl && !mapUrl.startsWith("https://yandex.ru/maps/")) {
             throw new Error("Ссылка на карту должна начинаться с https://yandex.ru/maps/");
         }
 
         const payload = {
             name: currentRouteData.name,
-            color: panel.querySelector('#color-input-text').value.trim(),
-            fromStation: panel.querySelector('#stop-first input').value.trim(),
-            toStation: panel.querySelector('#stop-last input').value.trim(),
-            routeType: parseInt(panel.querySelector('#price-variation').getAttribute('data-current-type')) || 0,
-            priceLow: parseInt(panel.querySelector('#price-first input').value) || 0,
-            priceHigh: parseInt(panel.querySelector('#price-second input').value) || 0,
+            color: panel.querySelector('#color-input-text')?.value.trim() || "#000000",
+            fromStation: panel.querySelector('#stop-first input')?.value.trim() || "",
+            toStation: panel.querySelector('#stop-last input')?.value.trim() || "",
+            routeType: parseInt(panel.querySelector('#price-variation')?.getAttribute('data-current-type')) || 0,
+            priceLow: parseInt(panel.querySelector('#price-first input')?.value) || 0,
+            priceHigh: parseInt(panel.querySelector('#price-second input')?.value) || 0,
             map: mapUrl ? 2 : 0,
             yandexMapLink: mapUrl || null
         };
@@ -189,11 +230,24 @@ async function saveAllData() {
         await apiCall('/NetworkStates/edit', 'PATCH', payload);
         alert("Успешно сохранено!");
         await fetchRoutes();
-    } catch (e) { alert("Ошибка: " + e.message); } 
-    finally { btn.disabled = false; btn.textContent = "Сохранить"; }
+    } catch (e) { 
+        alert("Ошибка: " + e.message); 
+    } finally { 
+        btn.disabled = false; 
+        btn.textContent = "Сохранить"; 
+    }
 }
 
 function initUI() {
+    const mainPanelPicker = document.querySelector('.modify-route-info #color-picker-hidden');
+    const mainPanelText = document.querySelector('.modify-route-info #color-input-text');
+    if (mainPanelPicker && mainPanelText) {
+        mainPanelPicker.addEventListener('input', (e) => {
+            mainPanelText.value = e.target.value.toUpperCase();
+            updateColorPreview(e.target.value, document.querySelector(".modify-route-info"));
+        });
+    }
+
     document.querySelectorAll(".dropdown-button").forEach((btn) => {
         btn.onclick = () => {
             const menu = btn.nextElementSibling;
@@ -223,26 +277,20 @@ function initUI() {
                 const tRange = document.getElementById("time-interval");
                 const tPrecise = document.getElementById("precise-time");
                 if (txt === "Точное время") {
-                    tRange.style.display = "none";
-                    tPrecise.style.display = "flex";
+                    if (tRange) tRange.style.display = "none";
+                    if (tPrecise) tPrecise.style.display = "flex";
                 } else {
-                    tRange.style.display = "flex";
-                    tPrecise.style.display = "none";
+                    if (tRange) tRange.style.display = "flex";
+                    if (tPrecise) tPrecise.style.display = "none";
                 }
             }
 
             if (drop.closest("#period-value-type")) {
-                const pRange = document.getElementById("period-interval");
                 const pPrecise = document.getElementById("precise-period");
-                if (txt === "Точный интервал") {
-                    pRange.style.display = "none";
-                    pPrecise.style.display = "flex";
-                } else if (txt === "Дежурный") {
-                    pRange.style.display = "none";
-                    pPrecise.style.display = "none";
+                if (txt === "Дежурный") {
+                    if (pPrecise) pPrecise.style.display = "none";
                 } else { 
-                    pRange.style.display = "flex";
-                    pPrecise.style.display = "none";
+                    if (pPrecise) pPrecise.style.display = "flex";
                 }
             }
 
@@ -254,8 +302,11 @@ function initUI() {
         btn.onclick = () => btn.closest(".overlay").classList.add("hidden");
     });
 
-    document.querySelector("#route-control-buttons button:last-child").onclick = saveAllData;
-    document.querySelector("#route-control-buttons button:first-child").onclick = async () => {
+    const saveBtn = document.querySelector("#route-control-buttons button:last-child");
+    if (saveBtn) saveBtn.onclick = saveAllData;
+
+    const delBtn = document.querySelector("#route-control-buttons button:first-child");
+    if (delBtn) delBtn.onclick = async () => {
         if (confirm("Удалить маршрут?")) {
             await apiCall(`/NetworkStates/remove?routeName=${currentRouteData.name}`, "DELETE");
             currentRouteData = null;
@@ -263,7 +314,8 @@ function initUI() {
         }
     };
 
-    document.getElementById("color-input-text").oninput = (e) =>
+    const colorTextInput = document.getElementById("color-input-text");
+    if (colorTextInput) colorTextInput.oninput = (e) =>
         updateColorPreview(e.target.value, document.querySelector(".modify-route-info"));
 }
 
@@ -280,56 +332,73 @@ function initOverlayWizard() {
     const oNote = document.getElementById('overlay-route-note');
     const oPeriod = document.getElementById('overlay-route-period');
     
-    document.querySelector('#route-schedule tfoot button').onclick = () => {
-        tempScheduleItem = {};
-        [oTime, oNote, oPeriod].forEach(o => o.querySelector('form').reset());
-        
-        oTime.querySelector('.dropdown-choice').textContent = "Диапазон времени";
-        document.getElementById('time-interval').style.display = 'flex';
-        document.getElementById('precise-time').style.display = 'none';
-        
-        oPeriod.querySelector('.dropdown-choice').textContent = "Диапазон времени";
-        document.getElementById('period-interval').style.display = 'flex';
-        document.getElementById('precise-period').style.display = 'none';
+    if (!oTime || !oNote || !oPeriod) return; 
 
-        oTime.classList.remove('hidden');
-    };
+    const addBtn = document.querySelector('#route-schedule tfoot button');
+    if (addBtn) {
+        addBtn.onclick = () => {
+            tempScheduleItem = {};
+            [oTime, oNote, oPeriod].forEach(o => o.querySelector('form').reset());
+            
+            oTime.querySelector('.dropdown-choice').textContent = "Диапазон времени";
+            document.getElementById('time-interval').style.display = 'flex';
+            document.getElementById('precise-time').style.display = 'none';
+            
+            oPeriod.querySelector('.dropdown-choice').textContent = "Точный интервал";
+            document.getElementById('precise-period').style.display = 'flex';
 
-    oTime.querySelector('form').onsubmit = (e) => {
-        e.preventDefault();
-        const choice = oTime.querySelector('.dropdown-choice').textContent.trim();
-        if (choice === "Точное время") {
-            tempScheduleItem.startRange = formatTime(document.getElementById('precise-time-text').value) || "00:00:00";
-            tempScheduleItem.endRange = null;
-        } else {
-            tempScheduleItem.startRange = formatTime(document.getElementById('from-time-text').value) || "00:00:00";
-            tempScheduleItem.endRange = formatTime(document.getElementById('to-time-text').value);
-        }
-        oTime.classList.add('hidden'); oNote.classList.remove('hidden');
-    };
+            oTime.classList.remove('hidden');
+        };
+    }
 
-    oNote.querySelector('form').onsubmit = (e) => {
-        e.preventDefault();
-        tempScheduleItem.annotation = document.getElementById('note-text').value || null;
-        oNote.classList.add('hidden'); oPeriod.classList.remove('hidden');
-    };
+    const tForm = oTime.querySelector('form');
+    if (tForm) {
+        tForm.onsubmit = (e) => {
+            e.preventDefault();
+            const choice = oTime.querySelector('.dropdown-choice').textContent.trim();
+            if (choice === "Точное время") {
+                tempScheduleItem.startRange = formatTime(document.getElementById('precise-time-text').value) || "00:00:00";
+                tempScheduleItem.endRange = null;
+            } else {
+                tempScheduleItem.startRange = formatTime(document.getElementById('from-time-text').value) || "00:00:00";
+                tempScheduleItem.endRange = formatTime(document.getElementById('to-time-text').value);
+            }
+            oTime.classList.add('hidden'); oNote.classList.remove('hidden');
+        };
+    }
 
-    oPeriod.querySelector('form').onsubmit = (e) => {
-        e.preventDefault();
-        const type = oPeriod.querySelector('.dropdown-choice').textContent.trim();
-        if (type === "Дежурный") tempScheduleItem.interval = -1;
-        else if (type === "Точный интервал") tempScheduleItem.interval = parseInt(document.getElementById('precise-period-text').value) || 0;
-        else tempScheduleItem.interval = parseInt(document.getElementById('period-interval').querySelector('input').value) || 0;
+    const nForm = oNote.querySelector('form');
+    if (nForm) {
+        nForm.onsubmit = (e) => {
+            e.preventDefault();
+            tempScheduleItem.annotation = document.getElementById('note-text').value || null;
+            oNote.classList.add('hidden'); oPeriod.classList.remove('hidden');
+        };
+    }
 
-        currentRouteData.scheduleTable.push(tempScheduleItem);
-        renderScheduleTable();
-        oPeriod.classList.add('hidden');
-    };
+    const pForm = oPeriod.querySelector('form');
+    if (pForm) {
+        pForm.onsubmit = (e) => {
+            e.preventDefault();
+            const type = oPeriod.querySelector('.dropdown-choice').textContent.trim();
+            
+            if (type === "Дежурный") {
+                tempScheduleItem.interval = -1;
+            } else {
+                tempScheduleItem.interval = parseInt(document.getElementById('precise-period-text').value) || 0;
+            }
+
+            currentRouteData.scheduleTable.push(tempScheduleItem);
+            renderScheduleTable();
+            oPeriod.classList.add('hidden');
+        };
+    }
 }
 
 function initCreateOverlay() {
     const overlay = document.getElementById('overlay-route-create');
-    
+    if (!overlay) return;
+
     const picker = overlay.querySelector('#color-picker-hidden');
     const textInput = overlay.querySelector('#color-input-text');
     if (picker && textInput) {
@@ -339,10 +408,17 @@ function initCreateOverlay() {
         });
     }
 
-    document.getElementById('create-route-button').onclick = () => {
-        overlay.querySelector('form').reset();
-        overlay.classList.remove('hidden');
-    };
+    const createBtn = document.getElementById('create-route-button');
+    if (createBtn) {
+        createBtn.onclick = () => {
+            overlay.querySelector('form').reset();
+            overlay.querySelector('.dropdown-choice').textContent = "По способу оплаты";
+            overlay.querySelector('#price-variation').setAttribute('data-current-type', "0");
+            applyPriceLabels(0, overlay);
+            updateColorPreview("#3E8DE9", overlay);
+            overlay.classList.remove('hidden');
+        };
+    }
     
     overlay.querySelector('form').onsubmit = async (e) => {
         e.preventDefault();
@@ -352,7 +428,10 @@ function initCreateOverlay() {
             color: overlay.querySelector('#color-input-text').value.trim() || "#3E8DE9",
             fromStation: overlay.querySelector('#stop-first input').value.trim(),
             toStation: overlay.querySelector('#stop-last input').value.trim(),
-            routeType: 0, priceLow: 0, priceHigh: 0, map: 0, yandexMapLink: null
+            routeType: parseInt(overlay.querySelector('#price-variation').getAttribute('data-current-type')) || 0,
+            priceLow: parseInt(overlay.querySelector('#price-first input').value) || 0,
+            priceHigh: parseInt(overlay.querySelector('#price-second input').value) || 0,
+            map: 0, yandexMapLink: null
         };
         await apiCall('/NetworkStates/create', 'POST', payload);
         overlay.classList.add('hidden');
