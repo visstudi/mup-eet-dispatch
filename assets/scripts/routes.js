@@ -146,13 +146,18 @@ function renderScheduleTable() {
 
     sorted.forEach((item, index) => {
         const isDuty = item.interval === -1;
+        const start = item.startRange ? item.startRange.slice(0, 5) : "00:00";
+        let timeText = start;
+        if (item.endRange) {
+            timeText += ` - ${item.endRange.slice(0, 5)}`;
+        }
         const tr = document.createElement('tr');
         tr.innerHTML = `
-            <td>${(item.startRange || '00:00').slice(0,5)} - ${(item.endRange || '...').slice(0,5)}</td>
+            <td>${timeText}</td>
             <td>${item.annotation || '-'}</td>
             <td>${isDuty ? '-' : (item.interval || 0) + ' мин.'}</td>
             <td><input type="checkbox" ${isDuty ? 'checked' : ''} class="duty-check" data-idx="${index}"></td>
-            <td><a href="#" style="color:#e93e3e" class="del-row" data-idx="${index}">Удалить</a></td>
+            <td><a href="#" style="color:#e93e3e; text-decoration: none;" class="del-row" data-idx="${index}">Удалить</a></td>
         `;
         tbody.appendChild(tr);
     });
