@@ -9,8 +9,14 @@ async function initUsersPage() {
     window.location.href = "login.html";
     return;
   }
-  initUI();
-  await fetchUsers();
+  
+  const checkUserInterval = setInterval(async () => {
+      if (window.currentUser) {
+          clearInterval(checkUserInterval);
+          initUI();
+          await fetchUsers();
+      }
+  }, 50);
 }
 
 async function apiCall(endpoint, method = "GET", body = null) {
@@ -66,17 +72,29 @@ function renderUsersTable(usersArray) {
   const tbody = document.querySelector("#users-table tbody");
   tbody.innerHTML = "";
 
+  const myId = window.currentUser ? window.currentUser.id : -1;
+
   usersArray.forEach((user) => {
     const tr = document.createElement("tr");
     if (!user.active) tr.classList.add("user-inactive");
 
+    const isMe = user.id === myId;
+    
+    const actionHtml = isMe 
+        ? `<span style="color: #888; cursor: not-allowed;" title="Нельзя редактировать свой профиль">Вы</span>`
+        : `<a onclick="openEditOverlay(${user.id})" style="cursor:pointer; color: #3e8de9; font-weight: bold;">Открыть</a>`;
+        
+    const checkboxHtml = isMe
+        ? `<input type="checkbox" disabled ${user.active ? "checked" : ""}>`
+        : `<input type="checkbox" class="toggle-active-chk" data-id="${user.id}" data-name="${user.name}" data-perm="${user.permLevel}" ${user.active ? "checked" : ""}>`;
+
     tr.innerHTML = `
-            <td>${user.id}</td>
-            <td>${user.name || "-"} <br><small style="color:#888">${user.login}</small></td>
-            <td>${getRoleName(user.permLevel)}</td>
-            <td><input type="checkbox" class="toggle-active-chk" data-id="${user.id}" data-name="${user.name}" data-perm="${user.permLevel}" ${user.active ? "checked" : ""}></td>
-            <td><a onclick="openEditOverlay(${user.id})" style="cursor:pointer; color: #3e8de9; font-weight: bold;">Открыть</a></td>
-        `;
+        <td>${user.id}</td>
+        <td>${user.name || "-"} <br><small style="color:#888">${user.login}</small></td>
+        <td>${getRoleName(user.permLevel)}</td>
+        <td>${checkboxHtml}</td>
+        <td>${actionHtml}</td>
+    `;
     tbody.appendChild(tr);
   });
 
@@ -160,16 +178,8 @@ window.openEditOverlay = (id) => {
   inputLogin.disabled = true;
   inputLogin.style.opacity = "0.6";
 
-  setDropdownValue(
-    "user-position",
-    getRoleName(user.permLevel),
-    user.permLevel,
-  );
-  setDropdownValue(
-    "user-state",
-    user.active ? "Активная" : "Неактивная",
-    user.active ? "true" : "false",
-  );
+  setDropdownValue("user-position", getRoleName(user.permLevel), user.permLevel);
+  setDropdownValue("user-state", user.active ? "Активная" : "Неактивная", user.active ? "true" : "false");
 
   inputPassword.value = "";
   inputPassword.placeholder = "Новый пароль (пусто = оставить старый)";
@@ -189,11 +199,8 @@ form.onsubmit = async (e) => {
   const name = inputName.value.trim();
   const login = inputLogin.value.trim();
   const password = inputPassword.value.trim();
-  const permLevel = parseInt(
-    document.getElementById("user-position").getAttribute("data-value"),
-  );
-  const isActive =
-    document.getElementById("user-state").getAttribute("data-value") === "true";
+  const permLevel = parseInt(document.getElementById("user-position").getAttribute("data-value"));
+  const isActive = document.getElementById("user-state").getAttribute("data-value") === "true";
 
   try {
     if (editingUserId === null) {
@@ -244,26 +251,18 @@ form.onsubmit = async (e) => {
 };
 
 function initUI() {
-  document
-    .querySelectorAll("#overlay-user-create .dropdown-button")
-    .forEach((btn) => {
+  document.querySelectorAll("#overlay-user-create .dropdown-button").forEach((btn) => {
       btn.addEventListener("click", function (e) {
         e.preventDefault();
         const menu = this.nextElementSibling;
-        document
-          .querySelectorAll("#overlay-user-create .dropdown-content")
-          .forEach((c) => {
+        document.querySelectorAll("#overlay-user-create .dropdown-content").forEach((c) => {
             if (c !== menu) c.style.maxHeight = null;
           });
-        menu.style.maxHeight = menu.style.maxHeight
-          ? null
-          : `${menu.scrollHeight}px`;
+        menu.style.maxHeight = menu.style.maxHeight ? null : `${menu.scrollHeight}px`;
       });
     });
 
-  document
-    .querySelectorAll("#user-position .dropdown-content div")
-    .forEach((div) => {
+  document.querySelectorAll("#user-position .dropdown-content div").forEach((div) => {
       div.addEventListener("click", function () {
         const txt = this.textContent.trim();
         if (!txt) return;
@@ -275,24 +274,16 @@ function initUI() {
       });
     });
 
-  document
-    .querySelectorAll("#user-state .dropdown-content div")
-    .forEach((div) => {
+  document.querySelectorAll("#user-state .dropdown-content div").forEach((div) => {
       div.addEventListener("click", function () {
         const txt = this.textContent.trim();
         if (!txt) return;
-        setDropdownValue(
-          "user-state",
-          txt,
-          txt === "Активная" ? "true" : "false",
-        );
+        setDropdownValue("user-state", txt, txt === "Активная" ? "true" : "false");
         this.parentElement.style.maxHeight = null;
       });
     });
 
-  document
-    .querySelectorAll('.form-control-buttons button[type="button"]')
-    .forEach((btn) => {
+  document.querySelectorAll('.form-control-buttons button[type="button"]').forEach((btn) => {
       btn.onclick = () => overlay.classList.add("hidden");
     });
 

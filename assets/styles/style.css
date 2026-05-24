@@ -242,16 +242,16 @@ textarea {
 }
 
 .overlay {
-  position: fixed;
-  left: 0;
-  top: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 3;
-  background-color: rgb(0 0 0 / 0.25);
-  width: 100dvw;
-  height: 100dvh;
+    position: fixed !important; 
+    top: 0 !important; 
+    left: 0 !important;
+    width: 100vw !important; 
+    height: 100vh !important;
+    display: flex !important; 
+    justify-content: center !important;
+    align-items: center !important;
+    background-color: rgba(0, 0, 0, 0.4) !important;
+    z-index: 9999 !important;
 }
 
 #overlay-route-create > form > fieldset > #route-number-color {
@@ -285,21 +285,21 @@ textarea {
 
 #overlay-user-create > form {
   width: min(55.6dvw, 80dvh);
+}
 
-  fieldset {
-    #user-password-wrapper > #user-password {
-      justify-content: space-between;
+#overlay-user-create fieldset {
+  gap: 20px; 
+}
 
-      #user-password-buttons {
-        gap: min(1dvw, 1.5dvh);
-      }
-    }
+#overlay-user-create .modal-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  width: 100%;
+}
 
-    #user-state-wrapper {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-    }
-  }
+.overlay.hidden {
+    display: none !important; 
 }
 
 #overlay-request-details > form {
@@ -1092,10 +1092,11 @@ main {
 }
 
 .overlay form {
-  background-color: white;
-  border-radius: 28px;
-  padding: 35px;
-  box-shadow: 0 15px 50px rgba(0, 0, 0, 0.2);
+    background-color: white;
+    border-radius: 28px;
+    padding: 35px;
+    box-shadow: 0 15px 50px rgba(0,0,0,0.2);
+    margin: auto;
 }
 
 body #requests-table {
